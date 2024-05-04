@@ -75,6 +75,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .clickable { navigator.navigate(AddRecipeScreenDestination()) }
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                     
                     //Ikon tombol menuju halaman Favorit
                     Icon(
@@ -132,8 +133,7 @@ fun HomeScreen(
                             LazyColumn {
                                 items(state.list){ recipe ->
                                     RecipeItem(
-                                        recipeName = recipe.recipeName,
-                                        recipeHolder = recipe.recipeHolder
+                                        recipeName = recipe.recipeName
                                     )
                                 }
                             }

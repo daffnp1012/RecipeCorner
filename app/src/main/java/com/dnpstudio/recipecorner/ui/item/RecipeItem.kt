@@ -23,7 +23,6 @@ import com.dnpstudio.recipecorner.R
 @Composable
 fun RecipeItem(
     recipeName: String,
-    recipeHolder: String,
 //    onClick: () -> Unit
 ) {
     Card(
@@ -41,8 +40,6 @@ fun RecipeItem(
         ) {
             Column {
                 Text(text = recipeName)
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(text = recipeHolder)
             }
             Image(
                 painter = painterResource(id = R.drawable.food_img_1),
@@ -55,5 +52,5 @@ fun RecipeItem(
 @Preview(showBackground = true)
 @Composable
 fun RecipeItemPreview() {
-    RecipeItem(recipeName = "Nama Resep", recipeHolder = "Pemilik Resep")
+    RecipeItem(recipeName = "Nama Resep")
 }
