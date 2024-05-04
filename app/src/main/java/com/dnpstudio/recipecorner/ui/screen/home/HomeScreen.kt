@@ -73,7 +73,8 @@ fun HomeScreen(
                         imageVector = Icons.Default.Add,
                         contentDescription = "",
                         modifier = Modifier
-                            .clickable { navigator.navigate(AddRecipeScreenDestination()) }
+                            .clickable { navigator.navigate(AddRecipeScreenDestination()) },
+                        tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     
