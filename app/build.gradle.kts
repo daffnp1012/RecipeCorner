@@ -48,7 +48,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -89,8 +89,6 @@ dependencies {
 
     //Ktor Engine
     implementation ("io.ktor:ktor-client-android:2.3.9")
-    implementation ("io.ktor:ktor-client-core:2.3.9")
-    implementation ("io.ktor:ktor-utils:2.3.9")
 
     //Coil Image Loader
     implementation("io.coil-kt:coil-compose:2.6.0")

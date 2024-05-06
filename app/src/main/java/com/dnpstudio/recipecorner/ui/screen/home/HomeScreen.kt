@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dnpstudio.recipecorner.ui.item.RecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.AddRecipeScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.ProfileScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.home.event.HomeEvent
 import com.dnpstudio.recipecorner.ui.screen.home.state.HomeState
 import com.ramcosta.composedestinations.annotation.Destination
@@ -69,6 +70,7 @@ fun HomeScreen(
                     Color(0xFF8C6A5D)
                 ),
                 actions = {
+                    //Ikon tombol untuk menuju halaman tambah resep
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "",
@@ -77,20 +79,14 @@ fun HomeScreen(
                         tint = Color.White
                     )
                     Spacer(modifier = Modifier.width(16.dp))
-                    
-                    //Ikon tombol menuju halaman Favorit
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
 
                     //Ikon tombol menuju halaman Profile
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "",
-                        tint = Color.White
+                        tint = Color.White,
+                        modifier = Modifier
+                            .clickable { navigator.navigate(ProfileScreenDestination()) }
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                 },
@@ -103,6 +99,7 @@ fun HomeScreen(
         ) {
 
             Box(modifier = Modifier.fillMaxSize()){
+
                 Text(
                     text = "Halo! Pengguna",
                     fontSize = 24.sp,
@@ -116,13 +113,23 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                Text(
+                    text = "Resep Anda",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp
+                        )
+                )
+
                 homeState.let { state ->
                     when(state){
                         //Ketika terjadi eror
                         is HomeState.Error -> {
-                            Toast.makeText(context, "Terjadi error", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                         }
-                        //Ketika sedang memuat
+                        //Ketika sedang  memuat data
                         HomeState.Loading -> {
                             CircularProgressIndicator(
                                 modifier = Modifier.align(Alignment.Center)
@@ -146,10 +153,14 @@ fun HomeScreen(
                                 modifier = Modifier.align(Alignment.Center)
                             )
                         }
+
+                        else -> {
+
+                        }
                     }
                 }
-            }
 
+            }
         }
     }
 }

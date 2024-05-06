@@ -34,7 +34,6 @@ import com.dnpstudio.recipecorner.R
 @Composable
 fun DetailScreen(
     detailRecipeName: String,
-    detailRecipeHolder: String,
     ingredients: String,
     steps: String
 ) {
@@ -91,11 +90,6 @@ fun DetailScreen(
                     contentDescription = ""
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = detailRecipeHolder,
-                fontSize = 18.sp
-            )
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = "Bahan-bahan:")
@@ -115,7 +109,6 @@ fun DetailScreen(
 fun DetailScreenPreview() {
     DetailScreen(
         detailRecipeName = "Nama Resep",
-        detailRecipeHolder = "Pemegang resep",
         ingredients = "Bahan...",
         steps = "Langkah.."
     )

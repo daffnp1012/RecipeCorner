@@ -1,5 +1,7 @@
 package com.dnpstudio.recipecorner.ui.screen.home
 
+import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dnpstudio.recipecorner.data.repository.RecipeRepository
@@ -29,7 +31,7 @@ class HomeViewModel @Inject constructor(
                     try {
                         _recipeListState.emit(HomeState.Success(repository.getRecipe()))
                     } catch (e: Exception){
-                        _recipeListState.emit(HomeState.Error("Error occured"))
+                        _recipeListState.emit(HomeState.Error(e.toString()))
                         return@launch
                     }
                 }

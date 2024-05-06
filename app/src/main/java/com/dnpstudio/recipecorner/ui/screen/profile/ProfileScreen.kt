@@ -1,6 +1,7 @@
 package com.dnpstudio.recipecorner.ui.screen.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,13 +17,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,11 +36,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dnpstudio.recipecorner.R
-import com.dnpstudio.recipecorner.ui.item.UserRecipeItem
+import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
+import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Destination
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    navigator: DestinationsNavigator
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -59,6 +66,9 @@ fun ProfileScreen() {
                         tint = Color.White,
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
+                            .clickable {
+                                navigator.navigate(HomeScreenDestination())
+                            }
                     )
                 }
             )
@@ -76,13 +86,20 @@ fun ProfileScreen() {
                     .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = "",
+                Box(
                     modifier = Modifier
+                        .size(72.dp)
                         .padding(start = 12.dp)
-                        .clip(shape = RoundedCornerShape(15.dp))
-                )
+                        .clip(shape = RoundedCornerShape(15.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.user_icon),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(64.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.size(24.dp))
                 Column{
                     Text(
@@ -123,16 +140,12 @@ fun ProfileScreen() {
 
             LazyColumn{
                 items(10){
-                    UserRecipeItem()
+                    FavoriteRecipeItem(
+                        favRecipeName = "Nama resep"
+                    )
                 }
             }
 
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen()
 }
