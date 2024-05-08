@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dnpstudio.recipecorner"
-        minSdk = 21
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -82,13 +82,15 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0")
 
     //Supabase Dependency
-    implementation ("io.github.jan-tennert.supabase:postgrest-kt:2.2.3")
-    implementation ("io.github.jan-tennert.supabase:storage-kt:2.2.3")
-    implementation ("io.github.jan-tennert.supabase:gotrue-kt:2.2.3")
-    implementation ("io.github.jan-tennert.supabase:functions-kt:2.2.3")
+    implementation(platform("io.github.jan-tennert.supabase:bom:2.3.1"))
+    implementation ("io.github.jan-tennert.supabase:postgrest-kt")
+    implementation ("io.github.jan-tennert.supabase:storage-kt")
+    implementation ("io.github.jan-tennert.supabase:gotrue-kt")
+    implementation ("io.github.jan-tennert.supabase:functions-kt")
+    implementation("io.github.jan-tennert.supabase:realtime-kt")
 
     //Ktor Engine
-    implementation ("io.ktor:ktor-client-android:2.3.9")
+    implementation ("io.ktor:ktor-client-okhttp:2.3.10")
 
     //Coil Image Loader
     implementation("io.coil-kt:coil-compose:2.6.0")
@@ -107,5 +109,8 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.49")
     ksp("com.google.dagger:hilt-android-compiler:2.49")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+
+    //API Wrapper
+    implementation("com.github.rmaprojects:apiresponsewrapper:1.5.2")
 
 }

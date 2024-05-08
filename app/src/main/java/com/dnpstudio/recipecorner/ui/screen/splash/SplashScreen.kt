@@ -31,6 +31,7 @@ fun SplashScreen(
         delay(2000)
         navigator.navigate(HomeScreenDestination())
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
