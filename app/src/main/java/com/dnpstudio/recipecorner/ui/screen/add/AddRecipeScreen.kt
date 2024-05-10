@@ -1,6 +1,8 @@
 package com.dnpstudio.recipecorner.ui.screen.add
 
-
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -23,11 +27,22 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
+import com.dnpstudio.recipecorner.data.source.remote.Recipe
+import com.dnpstudio.recipecorner.preference.LocalUser
+import com.dnpstudio.recipecorner.ui.screen.auth.login.LoginScreen
 import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -36,8 +51,13 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddRecipeScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    viewModel: AddRecipeViewModel = hiltViewModel()
 ) {
+
+    val addRecipeState by viewModel.addRecipeState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,7 +73,7 @@ fun AddRecipeScreen(
                 navigationIcon = {
                     IconButton(onClick = {navigator.navigate(HomeScreenDestination())}) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "",
                             modifier = Modifier
                                 .padding(horizontal = 12.dp),
@@ -64,6 +84,23 @@ fun AddRecipeScreen(
             )
         }
     ) {
+
+        var recipeImg by remember {
+            mutableStateOf(TextFieldValue(""))
+        }
+
+        var recipeName by remember {
+            mutableStateOf(TextFieldValue(""))
+        }
+
+        var ingredients by remember {
+            mutableStateOf(TextFieldValue(""))
+        }
+
+        var steps by remember {
+            mutableStateOf(TextFieldValue(""))
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -72,11 +109,27 @@ fun AddRecipeScreen(
                 .padding(top = 24.dp)
         ) {
 
+            Card(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .background(Color.Gray)
+            ) {
+                AsyncImage(
+                    model = null,
+                    contentDescription = ""
+                )
+            }
+
             //Kolom untuk mengisi nama resep
             OutlinedTextField(
-                value = "",
+                value = recipeName,
                 label = { Text(text = "Nama Resep") },
-                onValueChange = {},
+                onValueChange = {
+                    recipeName = it
+                },
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -84,9 +137,11 @@ fun AddRecipeScreen(
 
             //Kolom untuk mengisi bahan-bahan
             OutlinedTextField(
-                value = "",
+                value = ingredients,
                 label = { Text(text = "Bahan-bahan:") },
-                onValueChange = {},
+                onValueChange = {
+                    ingredients = it
+                },
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -94,9 +149,11 @@ fun AddRecipeScreen(
 
             //Kolom untuk mengisi langkah pembuatan
             OutlinedTextField(
-                value = "",
+                value = steps,
                 label = { Text(text = "Langkah pembuatan:") },
-                onValueChange = {},
+                onValueChange = {
+                    steps = it
+                },
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -108,7 +165,16 @@ fun AddRecipeScreen(
             ) {
                 //Tombol untuk konfirmasi penambahan resep
                 Button(
-                    onClick = {},
+                    onClick = {
+                        viewModel.addRecipe(
+                            Recipe(
+                                userId = LocalUser.id,
+                                recipeName = recipeName.text,
+                                ingredients = ingredients.text,
+                                steps = steps.text
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Bottom),
@@ -121,5 +187,24 @@ fun AddRecipeScreen(
             }
 
         }
+        addRecipeState.DisplayResult(
+            onLoading = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    CircularProgressIndicator()
+                }
+            },
+            onSuccess = {
+                navigator.navigate(HomeScreenDestination)
+                Toast.makeText(context, "Sukses menambahkan resep", Toast.LENGTH_SHORT).show()
+            },
+            onError = { it, _ ->
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                Log.d("OSAS", it)
+            }
+        )
     }
 }

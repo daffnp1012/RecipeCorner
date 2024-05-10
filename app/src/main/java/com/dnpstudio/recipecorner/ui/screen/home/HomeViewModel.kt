@@ -32,18 +32,17 @@ class HomeViewModel @Inject constructor(
             ResponseState.Loading
         )
 
-
     fun onRealtimeRecipeList() {
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getRecipe()
                 .onSuccess { flow ->
                     flow.onEach {
-                        _recipeListState.emit(ResponseState.Loading)
+                        _recipeListState.emit(ResponseState.Success(it))
                     }.collect()
                 }
                 .onFailure {
-                    _recipeListState.emit(ResponseState.Loading)
+                    _recipeListState.emit(ResponseState.Error(it.message.toString()))
                 }
         }
     }

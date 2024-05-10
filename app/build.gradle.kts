@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
 
     //Kotlin Serializer
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.0-Beta5"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
     //Dagger Hilt
     id("com.google.dagger.hilt.android")
     //Kotlin Ksp

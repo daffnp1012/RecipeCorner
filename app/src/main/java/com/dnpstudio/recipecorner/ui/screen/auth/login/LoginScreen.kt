@@ -34,7 +34,7 @@ fun LoginScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 72.dp, horizontal = 16.dp)
+            .padding(vertical = 64.dp, horizontal = 16.dp)
     ) {
 
         var email by remember {
@@ -48,7 +48,7 @@ fun LoginScreen() {
         //Judul halaman Register
         Text(
             text = "Masuk",
-            fontSize = 64.sp,
+            fontSize = 56.sp,
             fontWeight = FontWeight.Bold,
         )
         
@@ -63,7 +63,7 @@ fun LoginScreen() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(top = 180.dp)
+                .padding(top = 150.dp)
         ) {
             //SUSUNAN CARD UNTUK MENGISI EMAIL DAN PASSWORD
             OutlinedTextField(
@@ -74,7 +74,7 @@ fun LoginScreen() {
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
                 value = "",
                 label = { Text(text = "Kata Sandi")},
@@ -96,11 +96,12 @@ fun LoginScreen() {
             }
         }
 
+        Spacer(modifier = Modifier.size(64.dp))
+        
         //BUTTON UNTUK MENYELESAIKAN LOGIN
         Row(
             modifier = Modifier
                 .fillMaxHeight(),
-            verticalAlignment = Alignment.Bottom
         ) {
             Button(
                 modifier = Modifier

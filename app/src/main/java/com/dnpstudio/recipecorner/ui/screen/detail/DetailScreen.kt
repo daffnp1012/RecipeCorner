@@ -33,13 +33,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
-import com.dnpstudio.recipecorner.ui.screen.home.event.HomeEvent
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -75,7 +73,7 @@ fun DetailScreen(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
                             .clickable {
-                                navigator.navigate(HomeScreenDestination())
+                                navigator.popBackStack()
                             }
                     )
                 }

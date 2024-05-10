@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.RegisterScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -44,4 +45,5 @@ fun SplashScreen(
             contentDescription = ""
         )
     }
+
 }

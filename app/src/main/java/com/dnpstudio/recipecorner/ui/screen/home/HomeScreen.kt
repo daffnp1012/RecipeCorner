@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,7 +50,7 @@ fun HomeScreen(
     val homeState = homeViewModel.recipeListState.collectAsStateWithLifecycle()
 //    val context = LocalContext.current
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         homeViewModel.onRealtimeRecipeList()
     }
 
@@ -128,14 +129,14 @@ fun HomeScreen(
                                 RecipeItem(
                                     recipeName = recipe.recipeName,
                                     onClick = {
-                                        navigator.navigate(
-                                            DetailScreenDestination(
-                                                ReadArguments(
-                                                    id = recipe.id,
-                                                    recipeName = recipe.recipeName
-                                                )
-                                            )
-                                        )
+//                                        navigator.navigate(
+//                                            DetailScreenDestination(
+//                                                ReadArguments(
+//                                                    id = recipe.id,
+//                                                    recipeName = recipe.recipeName
+//                                                )
+//                                            )
+//                                        )
                                     }
                                 )
                             }
@@ -149,4 +150,9 @@ fun HomeScreen(
             }
         }
     }
+    
+    DisposableEffect(Unit){
+        onDispose { homeViewModel.leaveRealtimeChannel() }
+    }
+
 }
