@@ -7,7 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Recipe(
     @PrimaryKey(autoGenerate = true)
-    @SerialName("user_id") val userId: String,
     @SerialName("id") val id: Int? = null,
     @SerialName("recipe_name") val recipeName: String,
     @SerialName("recipe_img") val recipeImg: String? = null,

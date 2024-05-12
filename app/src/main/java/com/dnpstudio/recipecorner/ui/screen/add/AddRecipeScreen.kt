@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -71,7 +72,7 @@ fun AddRecipeScreen(
                     Color(0xFF8C6A5D)
                 ),
                 navigationIcon = {
-                    IconButton(onClick = {navigator.navigate(HomeScreenDestination())}) {
+                    IconButton(onClick = { navigator.navigate(HomeScreenDestination()) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "",
@@ -101,7 +102,7 @@ fun AddRecipeScreen(
             mutableStateOf(TextFieldValue(""))
         }
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
@@ -109,102 +110,108 @@ fun AddRecipeScreen(
                 .padding(top = 24.dp)
         ) {
 
-            Card(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .background(Color.Gray)
-            ) {
-                AsyncImage(
-                    model = null,
-                    contentDescription = ""
+            item {
+                Column{
+                    Card(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .background(Color.Gray)
+                    ) {
+                        AsyncImage(
+                            model = null,
+                            contentDescription = ""
+                        )
+                    }
+
+                    //Kolom untuk mengisi nama resep
+                    OutlinedTextField(
+                        value = recipeName,
+                        label = { Text(text = "Nama Resep") },
+                        onValueChange = {
+                            recipeName = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    //Kolom untuk mengisi bahan-bahan
+                    OutlinedTextField(
+                        value = ingredients,
+                        label = { Text(text = "Bahan-bahan:") },
+                        onValueChange = {
+                            ingredients = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    //Kolom untuk mengisi langkah pembuatan
+                    OutlinedTextField(
+                        value = steps,
+                        label = { Text(text = "Langkah pembuatan:") },
+                        onValueChange = {
+                            steps = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(bottom = 24.dp)
+                    ) {
+                        //Tombol untuk konfirmasi penambahan resep
+                        Button(
+                            onClick = {
+                                viewModel.addRecipe(
+                                    Recipe(
+                                        recipeName = recipeName.text,
+                                        ingredients = ingredients.text,
+                                        steps = steps.text
+                                    )
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Bottom),
+                            colors = ButtonDefaults.buttonColors(
+                                Color(0xFF8C6A5D)
+                            )
+                        ) {
+                            Text(text = "Konfirmasi")
+                        }
+                    }
+
+                }
+
+                addRecipeState.DisplayResult(
+                    onLoading = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    },
+                    onSuccess = {
+                        navigator.navigate(HomeScreenDestination)
+                        Toast.makeText(context, "Sukses menambahkan resep", Toast.LENGTH_SHORT)
+                            .show()
+                    },
+                    onError = { it, _ ->
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                        Log.d("OSAS", it)
+                    }
                 )
             }
-
-            //Kolom untuk mengisi nama resep
-            OutlinedTextField(
-                value = recipeName,
-                label = { Text(text = "Nama Resep") },
-                onValueChange = {
-                    recipeName = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            //Kolom untuk mengisi bahan-bahan
-            OutlinedTextField(
-                value = ingredients,
-                label = { Text(text = "Bahan-bahan:") },
-                onValueChange = {
-                    ingredients = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            //Kolom untuk mengisi langkah pembuatan
-            OutlinedTextField(
-                value = steps,
-                label = { Text(text = "Langkah pembuatan:") },
-                onValueChange = {
-                    steps = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(bottom = 24.dp)
-            ) {
-                //Tombol untuk konfirmasi penambahan resep
-                Button(
-                    onClick = {
-                        viewModel.addRecipe(
-                            Recipe(
-                                userId = LocalUser.id,
-                                recipeName = recipeName.text,
-                                ingredients = ingredients.text,
-                                steps = steps.text
-                            )
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Bottom),
-                    colors = ButtonDefaults.buttonColors(
-                        Color(0xFF8C6A5D)
-                    )
-                ) {
-                    Text(text = "Konfirmasi")
-                }
-            }
-
         }
-        addRecipeState.DisplayResult(
-            onLoading = {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    CircularProgressIndicator()
-                }
-            },
-            onSuccess = {
-                navigator.navigate(HomeScreenDestination)
-                Toast.makeText(context, "Sukses menambahkan resep", Toast.LENGTH_SHORT).show()
-            },
-            onError = { it, _ ->
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                Log.d("OSAS", it)
-            }
-        )
+
     }
 }

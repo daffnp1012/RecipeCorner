@@ -13,16 +13,20 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,7 +39,7 @@ import com.dnpstudio.recipecorner.ui.item.RecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.AddRecipeScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.DetailScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.ProfileScreenDestination
-import com.dnpstudio.recipecorner.ui.screen.detail.ReadArguments
+import com.dnpstudio.recipecorner.ui.screen.detail.DetailArguments
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -48,6 +52,9 @@ fun HomeScreen(
 ) {
 
     val homeState = homeViewModel.recipeListState.collectAsStateWithLifecycle()
+
+    val searchText by homeViewModel.searchText.collectAsState()
+    val isSearching by homeViewModel.isSearching.collectAsState()
 //    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
@@ -88,6 +95,7 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.width(16.dp))
                 },
             )
+
         }
     ) {
         Column(
@@ -95,54 +103,102 @@ fun HomeScreen(
                 .padding(it)
         ) {
 
-            Box(modifier = Modifier.fillMaxSize()) {
-
-                Text(
-                    text = "Halo! Pengguna",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(
-                            top = 12.dp,
-                            start = 16.dp
-                        )
-                )
-
-                Spacer(modifier = Modifier.size(16.dp))
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
 
                 homeState.value.DisplayResult(
                     onLoading = {
-                          Box(
-                              modifier = Modifier
-                                  .fillMaxSize(),
-                              contentAlignment = Alignment.Center
-                          ){
-                              CircularProgressIndicator()
-                          }
-                    },
-                    onSuccess = {
-                        LazyColumn(
+                        Box(
                             modifier = Modifier
-                                .fillMaxSize()
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.Center
                         ) {
-                            items(it) { recipe ->
-                                RecipeItem(
-                                    recipeName = recipe.recipeName,
-                                    onClick = {
-//                                        navigator.navigate(
-//                                            DetailScreenDestination(
-//                                                ReadArguments(
-//                                                    id = recipe.id,
-//                                                    recipeName = recipe.recipeName
-//                                                )
-//                                            )
-//                                        )
-                                    }
+                            CircularProgressIndicator()
+                        }
+                    },
+                    onSuccess = { recipeList ->
+
+                        if (recipeList.isEmpty()) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .align(Alignment.Center)
+                            ) {
+                                Text(text = "Belum ada resep :(")
+                            }
+                        } else {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                            ) {
+
+                                SearchBar(
+                                    query = searchText,
+                                    onQueryChange = homeViewModel::onSearchTextChange,
+                                    onSearch = homeViewModel::onSearchTextChange,
+                                    active = isSearching,
+                                    onActiveChange = { homeViewModel.onToogleSearch() },
+                                    leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "") },
+                                    placeholder = { Text(text = "Cari") },
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .padding(top = 12.dp)
+                                ) {
+
+                                }
+
+                                Text(
+                                    text = "Halo! Pengguna",
+                                    fontSize = 24.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(
+                                            top = 12.dp,
+                                            start = 16.dp
+                                        )
                                 )
+
+                                Spacer(modifier = Modifier.size(16.dp))
+
+                                Text(
+                                    text = "Resep Anda",
+                                    fontSize = 18.sp,
+                                    modifier = Modifier
+                                        .padding(
+                                            start = 16.dp
+                                        )
+                                )
+
+                                Spacer(modifier = Modifier.size(16.dp))
+
+                                LazyColumn{
+                                    items(recipeList) { recipe ->
+
+                                        RecipeItem(
+                                            recipeName = recipe.recipeName,
+                                            onClick = {
+                                                navigator.navigate(
+                                                    DetailScreenDestination(
+                                                        DetailArguments(
+                                                            id = recipe.id,
+                                                            recipeName = recipe.recipeName,
+                                                            ingredients = recipe.ingredients,
+                                                            steps = recipe.steps
+                                                        )
+                                                    )
+                                                )
+                                            },
+                                            onDelete = {
+                                                homeViewModel.deleteRecipe(recipe.id!!)
+                                            }
+                                        )
+                                    }
+                                }
                             }
                         }
                     },
-                    onError = { _, _, ->
+                    onError = { _, _ ->
 
                     }
                 )
@@ -150,8 +206,8 @@ fun HomeScreen(
             }
         }
     }
-    
-    DisposableEffect(Unit){
+
+    DisposableEffect(Unit) {
         onDispose { homeViewModel.leaveRealtimeChannel() }
     }
 

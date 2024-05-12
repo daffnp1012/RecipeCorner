@@ -1,6 +1,8 @@
 package com.dnpstudio.recipecorner.data.repository
 
 import android.util.Log
+import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
+import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDao
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.dnpstudio.recipecorner.data.source.remote.User
 import com.dnpstudio.recipecorner.data.tables.SupabaseTables
@@ -15,7 +17,6 @@ import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.postgresListDataFlow
 import io.github.jan.supabase.realtime.postgresSingleDataFlow
 import io.github.jan.supabase.realtime.realtime
-import io.ktor.client.request.request
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -25,7 +26,8 @@ import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class RecipeRepositoryImpl @Inject constructor(
-    private val client: SupabaseClient
+    private val client: SupabaseClient,
+    private val favoriteDao: FavoriteDao
 ) : RecipeRepository {
 
     private val recipeChannel = client.channel("recipe")
@@ -33,6 +35,14 @@ class RecipeRepositoryImpl @Inject constructor(
     override suspend fun unsubcribeChannel() {
         recipeChannel.unsubscribe()
         client.realtime.removeChannel(recipeChannel)
+    }
+
+    override suspend fun insertFavorite(favorite: Favorite) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteFavorite(favorite: Favorite) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getRecipe(): Result<Flow<List<Recipe>>> {
@@ -45,7 +55,7 @@ class RecipeRepositoryImpl @Inject constructor(
         return Result.success(data)
     }
 
-    override suspend fun getRecipeDetail(): Result<Flow<Recipe>> {
+    override suspend fun getRecipeDetail(recipeId: Int): Result<Flow<Recipe>> {
         val data = recipeChannel.postgresSingleDataFlow(
             schema = "public",
             table = SupabaseTables.RECIPE_TABLE,
@@ -94,7 +104,7 @@ class RecipeRepositoryImpl @Inject constructor(
                 }
             }
             val user = client.auth.currentUserOrNull()
-            val publicUser = client.from("Users")
+            val publicUser = client.from("users")
                 .select {
                     filter {
                         User::id eq user?.id
@@ -141,22 +151,28 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-//    override fun updateRecipe(
-//        recipeName: String,
-//        recipeImg: String,
-//        ingredients: String,
-//        steps: String
-//    ): Flow<ResponseState<Recipe>>{
-//        return flow{
-//            client.from("recipe").update{
-//                update = {
-//                    set
-//                }
-//                request {
-//
-//                }
-//            }
-//        }
-//    }
+    override fun updateRecipe(
+        id: Int,
+        recipeImg: String,
+        recipeName: String,
+        ingredients: String,
+        steps: String
+    ): Flow<ResponseState<Boolean>> {
+        return flow {
+            client.from("recipe").update(
+                update = {
+                    set("recipe_img", recipeImg)
+                    set("recipe_name", recipeName)
+                    set("ingredients", ingredients)
+                    set("steps", steps)
+                },
+                request = {
+                    filter {
+                        eq("id", id)
+                    }
+                }
+            ).decodeList<Recipe>()
+        }
+    }
 
 }

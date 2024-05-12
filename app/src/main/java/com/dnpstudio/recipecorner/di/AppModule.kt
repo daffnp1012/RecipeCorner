@@ -1,7 +1,9 @@
 package com.dnpstudio.recipecorner.di
 
+import android.app.Application
 import com.dnpstudio.recipecorner.data.repository.RecipeRepository
 import com.dnpstudio.recipecorner.data.repository.RecipeRepositoryImpl
+import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,12 +35,21 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRepository(
-        supabaseClient: SupabaseClient
+        supabaseClient: SupabaseClient,
+        favoriteDatabase: FavoriteDatabase
     ): RecipeRepository{
         return RecipeRepositoryImpl(
-            client = supabaseClient
+            client = supabaseClient,
+            favoriteDatabase.favoriteDao()
         )
     }
 
+    @Provides
+    @Singleton
+    fun provideFavouriteDatabase(
+        app: Application
+    ): FavoriteDatabase{
+        return FavoriteDatabase.getInstance(app)
+    }
 
 }

@@ -17,14 +17,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
-import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.EditProfileScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -45,6 +50,11 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun ProfileScreen(
     navigator: DestinationsNavigator
 ) {
+
+    var checked by remember {
+        mutableStateOf(true)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -65,8 +75,14 @@ fun ProfileScreen(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
                             .clickable {
-                                navigator.navigate(HomeScreenDestination())
+                                navigator.popBackStack()
                             }
+                    )
+                },
+                actions = {
+                    Switch(
+                        checked = checked,
+                        onCheckedChange = {}
                     )
                 }
             )
@@ -107,7 +123,7 @@ fun ProfileScreen(
                     )
                     Spacer(modifier = Modifier.size(12.dp))
                     Button(
-                        onClick = {},
+                        onClick = {navigator.navigate(EditProfileScreenDestination)},
                         colors = ButtonDefaults.buttonColors(
                             Color(0xFF8C6A5D)
                         )
@@ -117,7 +133,7 @@ fun ProfileScreen(
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .height(6.dp)
                     .padding(horizontal = 16.dp)

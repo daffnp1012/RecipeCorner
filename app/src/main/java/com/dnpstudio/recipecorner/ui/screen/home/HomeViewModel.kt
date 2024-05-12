@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.ui.screen.home
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dnpstudio.recipecorner.data.repository.RecipeRepository
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -19,11 +21,19 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: RecipeRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _recipeListState = MutableStateFlow<ResponseState<List<Recipe>>>(
         ResponseState.Loading
     )
+
+    //State yang menyatakan sedang mencari atau tidak
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching = _isSearching.asStateFlow()
+
+    //State teks yang diketik user
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
 
     val recipeListState =
         _recipeListState.asStateFlow().stateIn(
@@ -32,11 +42,12 @@ class HomeViewModel @Inject constructor(
             ResponseState.Loading
         )
 
+    val recipeList = mutableStateListOf<Recipe>()
+
     fun onRealtimeRecipeList() {
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getRecipe()
-                .onSuccess { flow ->
+            repository.getRecipe().onSuccess { flow ->
                     flow.onEach {
                         _recipeListState.emit(ResponseState.Success(it))
                     }.collect()
@@ -51,4 +62,21 @@ class HomeViewModel @Inject constructor(
         repository.unsubcribeChannel()
     }
 
+    fun deleteRecipe(id: Int) {
+        viewModelScope.launch {
+            repository.deleteRecipe(id).collect()
+        }
+    }
+
+    //Search
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+
+    fun onToogleSearch() {
+        _isSearching.value = !_isSearching.value
+        if (!_isSearching.value) {
+            onSearchTextChange("")
+        }
+    }
 }
