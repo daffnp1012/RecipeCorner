@@ -160,6 +160,7 @@ fun ProfileScreen(
 
             LazyColumn{
                 items(favoriteList.size){
+
                     val favorite = favoriteList.get(it)
 
                     FavoriteRecipeItem(

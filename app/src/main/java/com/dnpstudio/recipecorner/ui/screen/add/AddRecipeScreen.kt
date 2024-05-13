@@ -194,8 +194,6 @@ fun AddRecipeScreen(
                     onLoading = {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxWidth()
                         ) {
                             CircularProgressIndicator()
                         }
