@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -98,74 +99,80 @@ fun UpdateRecipeScreen(
                 .padding(horizontal = 16.dp)
                 .padding(top = 24.dp)
         ) {
-
-            OutlinedTextField(
-                value = updateRecipeName,
-                label = { Text(text = "Nama Resep") },
-                onValueChange = {
-                    updateRecipeName = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = updateIngredients,
-                label = { Text(text = "Bahan-bahan:") },
-                onValueChange = {
-                    updateIngredients = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedTextField(
-                value = updateSteps,
-                label = { Text(text = "Langkah pembuatan:") },
-                onValueChange = {
-                    updateSteps = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(bottom = 24.dp)
-            ) {
-                Button(
-                    onClick = {
-                        viewModel.updateRecipe(
-                            id = viewModel.navArgs.id!!,
-                            recipeImg = "",
-                            recipeName = updateRecipeName.text,
-                            ingredients = updateIngredients.text,
-                            steps = updateSteps.text
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.Bottom),
-                    colors = ButtonDefaults.buttonColors(
-                        Color(0xFF8C6A5D)
+            LazyColumn{
+                item {
+                    OutlinedTextField(
+                        value = updateRecipeName,
+                        label = { Text(text = "Nama Resep") },
+                        onValueChange = {
+                            updateRecipeName = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
                     )
-                ) {
-                    Text(text = "Konfirmasi")
-                }
-                updateRecipeState.value.DisplayResult(
-                    onLoading = {
-                        LinearProgressIndicator()
-                    },
-                    onSuccess = {
-                        navigator.popBackStack()
-                    },
-                    onError = { _, _, ->
-                        Toast.makeText(context, "Terjadi eror saat meng-update resep", Toast.LENGTH_SHORT).show()
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = updateIngredients,
+                        label = { Text(text = "Bahan-bahan:") },
+                        onValueChange = {
+                            updateIngredients = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = updateSteps,
+                        label = { Text(text = "Langkah pembuatan:") },
+                        onValueChange = {
+                            updateSteps = it
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(bottom = 24.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                viewModel.updateRecipe(
+                                    id = viewModel.navArgs.id!!,
+                                    recipeImg = "",
+                                    recipeName = updateRecipeName.text,
+                                    ingredients = updateIngredients.text,
+                                    steps = updateSteps.text
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Bottom),
+                            colors = ButtonDefaults.buttonColors(
+                                Color(0xFF8C6A5D)
+                            )
+                        ) {
+                            Text(text = "Konfirmasi")
+                        }
+                        updateRecipeState.value.DisplayResult(
+                            onLoading = {
+                                LinearProgressIndicator(
+                                    modifier = Modifier
+                                        .padding(vertical = 16.dp)
+                                )
+                            },
+                            onSuccess = {
+                                navigator.popBackStack()
+                            },
+                            onError = { _, _, ->
+                                Toast.makeText(context, "Terjadi eror saat meng-update resep", Toast.LENGTH_SHORT).show()
+                            }
+                        )
                     }
-                )
+                }
             }
         }
     }

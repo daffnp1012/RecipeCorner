@@ -36,6 +36,8 @@ interface RecipeRepository {
 
     suspend fun unsubcribeChannel()
 
+    fun getFavoriteList(): Flow<List<Favorite>>
+
     suspend fun insertFavorite(favorite: Favorite)
 
     suspend fun deleteFavorite(favorite: Favorite)

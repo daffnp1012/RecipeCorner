@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dnpstudio.recipecorner.R
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -44,9 +45,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
-fun EditProfileScreen(
-    navigator: DestinationsNavigator
-) {
+fun EditProfileScreen() {
 
     var editProfileName by remember {
         mutableStateOf("")
@@ -123,7 +122,8 @@ fun EditProfileScreen(
 
             Text(
                 text = "Username",
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp
             )
 
             Spacer(modifier = Modifier.size(12.dp))
@@ -155,4 +155,10 @@ fun EditProfileScreen(
 
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EditProfileScreenPrevieww() {
+    EditProfileScreen()
 }

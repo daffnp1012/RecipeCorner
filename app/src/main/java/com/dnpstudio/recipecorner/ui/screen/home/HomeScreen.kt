@@ -144,17 +144,15 @@ fun HomeScreen(
                                     modifier = Modifier
                                         .padding(horizontal = 16.dp)
                                         .padding(top = 12.dp)
-                                ) {
-
-                                }
+                                ) {}
 
                                 Text(
                                     text = "Halo! Pengguna",
-                                    fontSize = 24.sp,
+                                    fontSize = 36.sp,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
                                         .padding(
-                                            top = 12.dp,
+                                            top = 16.dp,
                                             start = 16.dp
                                         )
                                 )

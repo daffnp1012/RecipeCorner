@@ -3,6 +3,7 @@ package com.dnpstudio.recipecorner.data.repository
 import android.util.Log
 import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDao
+import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDatabase
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.dnpstudio.recipecorner.data.source.remote.User
 import com.dnpstudio.recipecorner.data.tables.SupabaseTables
@@ -27,7 +28,8 @@ import javax.inject.Inject
 
 class RecipeRepositoryImpl @Inject constructor(
     private val client: SupabaseClient,
-    private val favoriteDao: FavoriteDao
+    private val favoriteDao: FavoriteDao,
+    private val favoriteDatabase: FavoriteDatabase
 ) : RecipeRepository {
 
     private val recipeChannel = client.channel("recipe")
@@ -37,13 +39,19 @@ class RecipeRepositoryImpl @Inject constructor(
         client.realtime.removeChannel(recipeChannel)
     }
 
+    override fun getFavoriteList(): Flow<List<Favorite>> {
+        return favoriteDatabase.favoriteDao().getFavoriteList()
+    }
+
     override suspend fun insertFavorite(favorite: Favorite) {
-        TODO("Not yet implemented")
+        return favoriteDatabase.favoriteDao().insertFavorite(favorite)
     }
 
     override suspend fun deleteFavorite(favorite: Favorite) {
-        TODO("Not yet implemented")
+        return favoriteDatabase.favoriteDao().deleteFavorite(favorite)
     }
+
+
 
     override suspend fun getRecipe(): Result<Flow<List<Recipe>>> {
         val data = recipeChannel.postgresListDataFlow(

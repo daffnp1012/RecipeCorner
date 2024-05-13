@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -38,6 +39,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.EditProfileScreenDestination
@@ -48,12 +51,15 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Destination
 @Composable
 fun ProfileScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
 
     var checked by remember {
         mutableStateOf(true)
     }
+
+    val favoriteList = viewModel.favoriteState.collectAsStateWithLifecycle().value
 
     Scaffold(
         topBar = {
@@ -153,9 +159,12 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             LazyColumn{
-                items(10){
+                items(favoriteList.size){
+                    val favorite = favoriteList.get(it)
+
                     FavoriteRecipeItem(
-                        favRecipeName = "Nama resep"
+                        favId = favorite.id!!,
+                        favRecipeName = favorite.favRecipeName
                     )
                 }
             }

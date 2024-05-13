@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.R
+import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.ui.screen.destinations.UpdateRecipeScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -104,13 +105,6 @@ fun DetailScreen(
                             contentDescription = ""
                         )
                     }
-                    Spacer(modifier = Modifier.size(12.dp))
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Default.Favorite,
-                            contentDescription = ""
-                        )
-                    }
                 }
             )
         }
@@ -157,10 +151,19 @@ fun DetailScreen(
                                     fontSize = 24.sp,
                                     fontWeight = FontWeight.Bold
                                 )
-                                Icon(
-                                    imageVector = Icons.Default.FavoriteBorder,
-                                    contentDescription = ""
-                                )
+                                IconButton(onClick = {
+                                    detailViewModel.insertFavorite(
+                                        Favorite(
+                                            id = null,
+                                            favRecipeName = detailView.recipeName
+                                        )
+                                    )
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.FavoriteBorder,
+                                        contentDescription = ""
+                                    )
+                                }
                             }
 
                             //Bagian Bahan-bahan (Ingredients)

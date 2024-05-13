@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dnpstudio.recipecorner.data.repository.RecipeRepository
+import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.dnpstudio.recipecorner.ui.screen.navArgs
 import com.rmaprojects.apirequeststate.ResponseState
@@ -54,4 +55,9 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+    fun insertFavorite(favorite: Favorite){
+        viewModelScope.launch {
+            repository.insertFavorite(favorite)
+        }
+    }
 }
