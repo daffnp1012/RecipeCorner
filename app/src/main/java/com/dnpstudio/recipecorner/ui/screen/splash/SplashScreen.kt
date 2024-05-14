@@ -1,6 +1,5 @@
 package com.dnpstudio.recipecorner.ui.screen.splash
 
-import android.window.SplashScreen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,10 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.RegisterScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.SplashScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

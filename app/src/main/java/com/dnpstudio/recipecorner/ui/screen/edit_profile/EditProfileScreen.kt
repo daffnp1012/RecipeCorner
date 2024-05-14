@@ -1,6 +1,7 @@
 package com.dnpstudio.recipecorner.ui.screen.edit_profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +19,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,7 +48,9 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
-fun EditProfileScreen() {
+fun EditProfileScreen(
+    navigator: DestinationsNavigator
+) {
 
     var editProfileName by remember {
         mutableStateOf("")
@@ -57,20 +62,24 @@ fun EditProfileScreen() {
                 title = {
                     Text(
                         text = "Edit Profil",
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.background
                     )
                 },
                 navigationIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "",
+                    IconButton(
+                        onClick = {navigator.popBackStack()},
                         modifier = Modifier
-                            .padding(horizontal = 12.dp),
-                        tint = Color.White
-                    )
+                            .padding(horizontal = 12.dp)
+                    ){
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.background
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    Color(0xFF8C6A5D)
+                    MaterialTheme.colorScheme.primary
                 )
             )
         }
@@ -79,8 +88,7 @@ fun EditProfileScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(horizontal = 16.dp)
-                .padding(top = 16.dp)
+                .background(MaterialTheme.colorScheme.secondary),
         ) {
 
             Column(
@@ -92,7 +100,7 @@ fun EditProfileScreen() {
                     Card(
                         modifier = Modifier
                             .size(120.dp)
-                            .clip(shape = CircleShape),
+                            .clip(shape = CircleShape)
                     ){
                         Box(
                             modifier = Modifier
@@ -113,7 +121,8 @@ fun EditProfileScreen() {
                         contentDescription = "",
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
-                            .size(32.dp)
+                            .size(32.dp),
+                        tint = MaterialTheme.colorScheme.primary
                     )
                 }
             }
@@ -123,7 +132,10 @@ fun EditProfileScreen() {
             Text(
                 text = "Username",
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier
+                    .padding(16.dp)
             )
 
             Spacer(modifier = Modifier.size(12.dp))
@@ -136,7 +148,9 @@ fun EditProfileScreen() {
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
                 ),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
             )
 
             Spacer(modifier = Modifier.size(20.dp))
@@ -147,18 +161,15 @@ fun EditProfileScreen() {
                     .fillMaxWidth()
                     .padding(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    Color(0xFF8C6A5D)
+                    MaterialTheme.colorScheme.primary
                 )
             ) {
-                Text(text = "Konfirmasi")
+                Text(
+                    text = "Konfirmasi",
+                    color = MaterialTheme.colorScheme.background
+                )
             }
 
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun EditProfileScreenPrevieww() {
-    EditProfileScreen()
 }

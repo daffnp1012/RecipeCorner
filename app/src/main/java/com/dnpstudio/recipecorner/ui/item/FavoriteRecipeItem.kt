@@ -15,6 +15,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +38,7 @@ fun FavoriteRecipeItem(
             .padding(16.dp)
             .height(72.dp),
         colors = CardDefaults.cardColors(
-            Color(0xFF8C6A5D)
+            MaterialTheme.colorScheme.primary
         )
     ) {
         Row(
@@ -54,12 +55,16 @@ fun FavoriteRecipeItem(
                 IconButton(
                     onClick = {}
                 ) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "")
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "",
+                        tint = MaterialTheme.colorScheme.background
+                    )
                 }
                 Spacer(modifier = Modifier.size(6.dp))
                 Text(
                     text = favRecipeName,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.background
                 )
             }
             Image(

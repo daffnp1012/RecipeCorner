@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.dnpstudio.recipecorner.ui.screen.NavGraphs
 import com.dnpstudio.recipecorner.ui.theme.RecipeCornerTheme
+import com.dnpstudio.recipecorner.utils.GlobalState
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,14 +21,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RecipeCornerTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    DestinationsNavHost(navGraph = NavGraphs.root)
-                }
+            RecipeCornerTheme(
+                darkTheme = GlobalState.isDarkMode
+            ) {
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }

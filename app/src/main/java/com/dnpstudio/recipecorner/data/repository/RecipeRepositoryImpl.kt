@@ -2,12 +2,11 @@ package com.dnpstudio.recipecorner.data.repository
 
 import android.util.Log
 import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
-import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDao
 import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDatabase
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.dnpstudio.recipecorner.data.source.remote.User
 import com.dnpstudio.recipecorner.data.tables.SupabaseTables
-import com.dnpstudio.recipecorner.preference.LocalUser
+import com.dnpstudio.recipecorner.preference.KotPref
 import com.rmaprojects.apirequeststate.ResponseState
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
@@ -22,13 +21,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 class RecipeRepositoryImpl @Inject constructor(
     private val client: SupabaseClient,
-    private val favoriteDao: FavoriteDao,
     private val favoriteDatabase: FavoriteDatabase
 ) : RecipeRepository {
 
@@ -51,16 +50,14 @@ class RecipeRepositoryImpl @Inject constructor(
         return favoriteDatabase.favoriteDao().deleteFavorite(favorite)
     }
 
-
-
     override suspend fun getRecipe(): Result<Flow<List<Recipe>>> {
         val data = recipeChannel.postgresListDataFlow(
             schema = "public",
             table = SupabaseTables.RECIPE_TABLE,
-            primaryKey = Recipe::id
+            primaryKey = Recipe::id,
         ).flowOn(Dispatchers.IO)
 
-        return Result.success(data)
+        return Result.success(data.map { it.sortedBy { it.id } })
     }
 
     override suspend fun getRecipeDetail(recipeId: Int): Result<Flow<Recipe>> {
@@ -68,7 +65,9 @@ class RecipeRepositoryImpl @Inject constructor(
             schema = "public",
             table = SupabaseTables.RECIPE_TABLE,
             primaryKey = Recipe::id
-        ) {}
+        ) {
+            Recipe::id eq recipeId
+        }
 
         return Result.success(data)
     }
@@ -111,6 +110,7 @@ class RecipeRepositoryImpl @Inject constructor(
                     put("username", username)
                 }
             }
+
             val user = client.auth.currentUserOrNull()
             val publicUser = client.from("users")
                 .select {
@@ -118,32 +118,43 @@ class RecipeRepositoryImpl @Inject constructor(
                         User::id eq user?.id
                     }
                 }.decodeSingle<User>()
-            LocalUser.apply {
+            KotPref.apply {
                 this.id = publicUser.id.toString()
                 this.username = publicUser.username
+                this.email = publicUser.email
             }
             emit(ResponseState.Success(true))
         } catch (e: Exception) {
             emit(ResponseState.Error(e.toString()))
-            Log.d("REPO", e.toString())
         }
 
     }
 
-    suspend fun login(email: String, password: String) {
+    override suspend fun login(email: String, password: String): Flow<ResponseState<Boolean>> = flow {
 
-        client.auth.signInWith(Email) {
-            this.email = email
-            this.password = password
-        }
-
-        val user = client.auth.currentSessionOrNull()?.user
-        val publicUser = client.postgrest["users"]
-            .select {
-                filter {
-                    User::id eq user!!.id
-                }
+        emit(ResponseState.Loading)
+        try {
+            client.auth.signInWith(Email) {
+                this.email = email
+                this.password = password
             }
+
+            val user = client.auth.currentSessionOrNull()?.user
+            val publicUser = client.from("users")
+                .select {
+                    filter {
+                        User::id eq user!!.id
+                    }
+                }.decodeSingle<User>()
+            KotPref.apply {
+                this.id = publicUser.id.toString()
+                this.username = publicUser.username
+                this.email = publicUser.email
+            }
+            emit(ResponseState.Success(true))
+        } catch (e: Exception){
+            emit(ResponseState.Error(e.toString()))
+        }
     }
 
     override fun insertRecipe(
@@ -179,7 +190,7 @@ class RecipeRepositoryImpl @Inject constructor(
                         eq("id", id)
                     }
                 }
-            ).decodeList<Recipe>()
+            )
         }
     }
 

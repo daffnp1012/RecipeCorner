@@ -17,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +42,7 @@ fun RecipeItem(
             .padding(16.dp)
             .height(72.dp),
         colors = CardDefaults.cardColors(
-            Color(0xFF8C6A5D)
+            MaterialTheme.colorScheme.primary
         ),
         onClick = { onClick() }
     ) {
@@ -59,13 +60,13 @@ fun RecipeItem(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.background
                     )
                 }
                 Spacer(modifier = Modifier.size(16.dp))
                 Text(
                     text = recipeName,
-                    color = Color.White
+                    color = MaterialTheme.colorScheme.background
                 )
             }
             Image(

@@ -1,10 +1,12 @@
 package com.dnpstudio.recipecorner.ui.screen.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,8 +19,10 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -36,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.ui.item.RecipeItem
+import com.dnpstudio.recipecorner.ui.item.SearchRecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.AddRecipeScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.DetailScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.ProfileScreenDestination
@@ -67,11 +72,11 @@ fun HomeScreen(
                 title = {
                     Text(
                         text = "Home",
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.background
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    Color(0xFF8C6A5D)
+                    MaterialTheme.colorScheme.primary
                 ),
                 actions = {
                     //Ikon tombol untuk menuju halaman tambah resep
@@ -80,7 +85,7 @@ fun HomeScreen(
                         contentDescription = "",
                         modifier = Modifier
                             .clickable { navigator.navigate(AddRecipeScreenDestination()) },
-                        tint = Color.White
+                        tint = MaterialTheme.colorScheme.background
                     )
                     Spacer(modifier = Modifier.width(16.dp))
 
@@ -88,7 +93,7 @@ fun HomeScreen(
                     Icon(
                         imageVector = Icons.Default.Person,
                         contentDescription = "",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.background,
                         modifier = Modifier
                             .clickable { navigator.navigate(ProfileScreenDestination()) }
                     )
@@ -101,6 +106,7 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .padding(it)
+                .background(MaterialTheme.colorScheme.secondary)
         ) {
 
             Box(
@@ -139,17 +145,76 @@ fun HomeScreen(
                                     onSearch = homeViewModel::onSearchTextChange,
                                     active = isSearching,
                                     onActiveChange = { homeViewModel.onToogleSearch() },
-                                    leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "") },
-                                    placeholder = { Text(text = "Cari") },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Default.Search,
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colorScheme.background
+                                        )
+                                    },
+                                    placeholder = {
+                                        Text(
+                                            text = "Cari",
+                                            color = MaterialTheme.colorScheme.background
+                                        )
+                                    },
                                     modifier = Modifier
+                                        .fillMaxWidth()
                                         .padding(horizontal = 16.dp)
-                                        .padding(top = 12.dp)
-                                ) {}
+                                        .padding(top = 12.dp),
+                                    colors = SearchBarDefaults.colors(
+                                        MaterialTheme.colorScheme.primary
+                                    )
+                                ) {
+                                    Column {
+                                        homeState.value.DisplayResult(
+                                            onLoading = {
+                                                Box(
+                                                    modifier = Modifier
+                                                        .fillMaxSize(),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    CircularProgressIndicator()
+                                                }
+                                            },
+                                            onSuccess = {
+                                                LazyColumn {
+                                                    items(it.filter {
+                                                        it.recipeName.contains(
+                                                            searchText,
+                                                            true
+                                                        )
+                                                    }) { recipe ->
+                                                        SearchRecipeItem(
+                                                            recipeName = recipe.recipeName,
+                                                            onClick = {
+                                                                navigator.navigate(
+                                                                    DetailScreenDestination(
+                                                                        navArgs = DetailArguments(
+                                                                            id = recipe.id,
+                                                                            recipeName = recipe.recipeName,
+                                                                            ingredients = recipe.ingredients,
+                                                                            steps = recipe.steps
+                                                                        )
+                                                                    )
+                                                                )
+                                                            }
+                                                        )
+                                                    }
+                                                }
+                                            },
+                                            onError = { _, _ ->
+
+                                            }
+                                        )
+                                    }
+                                }
 
                                 Text(
                                     text = "Halo! Pengguna",
                                     fontSize = 36.sp,
                                     fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.background,
                                     modifier = Modifier
                                         .padding(
                                             top = 16.dp,
@@ -162,6 +227,7 @@ fun HomeScreen(
                                 Text(
                                     text = "Resep Anda",
                                     fontSize = 18.sp,
+                                    color = MaterialTheme.colorScheme.background,
                                     modifier = Modifier
                                         .padding(
                                             start = 16.dp
@@ -170,7 +236,7 @@ fun HomeScreen(
 
                                 Spacer(modifier = Modifier.size(16.dp))
 
-                                LazyColumn{
+                                LazyColumn {
                                     items(recipeList) { recipe ->
 
                                         RecipeItem(

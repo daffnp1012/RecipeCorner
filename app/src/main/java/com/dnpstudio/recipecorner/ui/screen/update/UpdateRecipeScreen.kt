@@ -1,6 +1,8 @@
 package com.dnpstudio.recipecorner.ui.screen.update
 
+import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -18,7 +21,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -70,22 +75,22 @@ fun UpdateRecipeScreen(
                 title = {
                     Text(
                         text = "Update Resep",
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.background
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    Color(0xFF8C6A5D)
+                    MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
                     IconButton(
-                        onClick = {navigator.popBackStack()},
+                        onClick = { navigator.popBackStack() },
                         modifier = Modifier
                             .padding(horizontal = 12.dp),
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "",
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.background
                         )
                     }
                 }
@@ -96,47 +101,92 @@ fun UpdateRecipeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(horizontal = 16.dp)
-                .padding(top = 24.dp)
+                .background(MaterialTheme.colorScheme.secondary)
         ) {
-            LazyColumn{
+
+            Spacer(modifier = Modifier.size(24.dp))
+
+            LazyColumn {
                 item {
                     OutlinedTextField(
                         value = updateRecipeName,
-                        label = { Text(text = "Nama Resep") },
+                        label = {
+                            Text(
+                                text = "Nama Resep",
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        },
                         onValueChange = {
                             updateRecipeName = it
                         },
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.background,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
+                            focusedTextColor = MaterialTheme.colorScheme.background,
+                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                        )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
                         value = updateIngredients,
-                        label = { Text(text = "Bahan-bahan:") },
+                        label = {
+                            Text(
+                                text = "Bahan-bahan:",
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        },
                         onValueChange = {
                             updateIngredients = it
                         },
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.background,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
+                            focusedTextColor = MaterialTheme.colorScheme.background,
+                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                        )
                     )
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     OutlinedTextField(
                         value = updateSteps,
-                        label = { Text(text = "Langkah pembuatan:") },
+                        label = {
+                            Text(
+                                text = "Langkah pembuatan:",
+                                color = MaterialTheme.colorScheme.background
+                            )
+                        },
                         onValueChange = {
                             updateSteps = it
                         },
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.background,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
+                            focusedTextColor = MaterialTheme.colorScheme.background,
+                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                        )
                     )
 
                     Row(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .padding(bottom = 24.dp)
+                            .padding(top = 24.dp)
                     ) {
                         Button(
                             onClick = {
@@ -150,12 +200,16 @@ fun UpdateRecipeScreen(
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
                                 .align(Alignment.Bottom),
                             colors = ButtonDefaults.buttonColors(
-                                Color(0xFF8C6A5D)
+                                MaterialTheme.colorScheme.background
                             )
                         ) {
-                            Text(text = "Konfirmasi")
+                            Text(
+                                text = "Konfirmasi",
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         }
                         updateRecipeState.value.DisplayResult(
                             onLoading = {
@@ -165,10 +219,16 @@ fun UpdateRecipeScreen(
                                 )
                             },
                             onSuccess = {
-                                navigator.popBackStack()
+                                navigator.navigateUp()
+                                Toast.makeText(context, "Update terlaksanakan", Toast.LENGTH_SHORT).show()
                             },
-                            onError = { _, _, ->
-                                Toast.makeText(context, "Terjadi eror saat meng-update resep", Toast.LENGTH_SHORT).show()
+                            onError = { it, _ ->
+                                Toast.makeText(
+                                    context,
+                                    "Terjadi eror saat meng-update resep",
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                                Log.d("UPDATE", it)
                             }
                         )
                     }

@@ -32,7 +32,10 @@ interface RecipeRepository {
         password: String
     ): Flow<ResponseState<Boolean>>
 
-//   suspend fun login(email: String, password: String)
+   suspend fun login(
+       email: String,
+       password: String
+   ): Flow<ResponseState<Boolean>>
 
     suspend fun unsubcribeChannel()
 

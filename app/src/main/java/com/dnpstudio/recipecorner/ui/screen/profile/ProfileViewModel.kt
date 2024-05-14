@@ -21,10 +21,10 @@ class ProfileViewModel @Inject constructor(
         emptyList()
     )
 
-    fun deleteFavorite(favorite: Favorite){
-        viewModelScope.launch {
-
-        }
-    }
+//    fun deleteFavorite(favorite: Favorite){
+//        viewModelScope.launch {
+//
+//        }
+//    }
 
 }

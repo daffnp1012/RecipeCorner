@@ -75,6 +75,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //Material Icon
+    implementation ("androidx.compose.material:material-icons-extended:1.3.1")
+
     //Material 3
     implementation("androidx.compose.material3:material3:1.1.2")
 

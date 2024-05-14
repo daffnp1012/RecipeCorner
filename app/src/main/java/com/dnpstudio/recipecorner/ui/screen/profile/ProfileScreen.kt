@@ -1,6 +1,7 @@
 package com.dnpstudio.recipecorner.ui.screen.profile
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -42,8 +44,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.R
+import com.dnpstudio.recipecorner.preference.KotPref
 import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.EditProfileScreenDestination
+import com.dnpstudio.recipecorner.utils.GlobalState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -67,17 +71,17 @@ fun ProfileScreen(
                 title = {
                     Text(
                         text = "Profil",
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.background
                     )
                 },
                 colors = TopAppBarDefaults.largeTopAppBarColors(
-                    Color(0xFF8C6A5D)
+                    MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.background,
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
                             .clickable {
@@ -86,10 +90,22 @@ fun ProfileScreen(
                     )
                 },
                 actions = {
-                    Switch(
-                        checked = checked,
-                        onCheckedChange = {}
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Dark Mode",
+                            color = MaterialTheme.colorScheme.background
+                        )
+                        Switch(
+                            checked = checked,
+                            onCheckedChange = {
+                                checked = it
+                                GlobalState.isDarkMode = it
+                                KotPref.isDarkMode = it
+                            }
+                        )
+                    }
                 }
             )
         }
@@ -98,7 +114,7 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .padding(top = 16.dp)
+                .background(MaterialTheme.colorScheme.secondary),
         ) {
             Row(
                 modifier = Modifier
@@ -125,16 +141,20 @@ fun ProfileScreen(
                     Text(
                         text = "Username",
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.background
                     )
                     Spacer(modifier = Modifier.size(12.dp))
                     Button(
                         onClick = {navigator.navigate(EditProfileScreenDestination)},
                         colors = ButtonDefaults.buttonColors(
-                            Color(0xFF8C6A5D)
+                            MaterialTheme.colorScheme.primary
                         )
                     ) {
-                        Text(text = "Edit Profil")
+                        Text(
+                            text = "Edit Profil",
+                            color = MaterialTheme.colorScheme.background
+                        )
                     }
                 }
             }
@@ -152,6 +172,7 @@ fun ProfileScreen(
                 text = "Resep Favorit",
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
                     .padding(start = 16.dp)
             )
@@ -167,6 +188,7 @@ fun ProfileScreen(
                         favId = favorite.id!!,
                         favRecipeName = favorite.favRecipeName
                     )
+
                 }
             }
 

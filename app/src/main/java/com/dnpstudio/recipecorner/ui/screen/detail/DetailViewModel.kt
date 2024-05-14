@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.ui.screen.detail
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -37,14 +38,15 @@ class DetailViewModel @Inject constructor(
             ResponseState.Loading
     )
 
-    fun onRealtimeRecipeDetail(recipeId: Int) {
+    fun onRealtimeRecipeDetail() {
         viewModelScope.launch(Dispatchers.IO){
-            repository.getRecipeDetail(recipeId).onSuccess {
+            repository.getRecipeDetail(navArgs.id!!).onSuccess {
                 it.onEach {
                     _detailState.emit(ResponseState.Success(it))
                 }.collect()
             }.onFailure {
                 _detailState.emit(ResponseState.Error(it.message.toString()))
+                Log.d("DETAIL", it.message.toString())
             }
         }
     }

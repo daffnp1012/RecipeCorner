@@ -2,6 +2,7 @@ package com.dnpstudio.recipecorner.ui.screen.detail
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -61,7 +63,7 @@ fun DetailScreen(
     val context = LocalContext.current
 
     LaunchedEffect(true) {
-        detailViewModel.onRealtimeRecipeDetail(detailViewModel.navArgs.id!!)
+        detailViewModel.onRealtimeRecipeDetail()
     }
 
     Scaffold(
@@ -70,17 +72,17 @@ fun DetailScreen(
                 title = {
                     Text(
                         text = "Detail",
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.background
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    Color(0xFF8C6A5D)
+                    MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.background,
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
                             .clickable {
@@ -91,18 +93,21 @@ fun DetailScreen(
                 actions = {
                     Spacer(modifier = Modifier.size(12.dp))
                     IconButton(onClick = {
-                        navigator.navigate(UpdateRecipeScreenDestination(
-                            DetailArguments(
-                                id = detailState.value.getSuccessData().id,
-                                recipeName = detailState.value.getSuccessData().recipeName,
-                                ingredients = detailState.value.getSuccessData().ingredients,
-                                steps = detailState.value.getSuccessData().steps
+                        navigator.navigate(
+                            UpdateRecipeScreenDestination(
+                                DetailArguments(
+                                    id = detailState.value.getSuccessData().id,
+                                    recipeName = detailState.value.getSuccessData().recipeName,
+                                    ingredients = detailState.value.getSuccessData().ingredients,
+                                    steps = detailState.value.getSuccessData().steps
+                                )
                             )
-                        ))
+                        )
                     }) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = ""
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.background
                         )
                     }
                 }
@@ -110,7 +115,10 @@ fun DetailScreen(
         }
     ) {
         Column(
-            modifier = Modifier.padding(it)
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.secondary)
         ) {
             detailState.value.DisplayResult(
                 onLoading = {
@@ -131,12 +139,12 @@ fun DetailScreen(
                             .padding(horizontal = 16.dp)
                     ) {
                         item {
+                            Spacer(modifier = Modifier.size(16.dp))
                             Image(
                                 painter = painterResource(id = R.drawable.food_img_1),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 16.dp)
                                     .height(240.dp)
                                     .clip(shape = RoundedCornerShape(15.dp))
                             )
@@ -149,7 +157,8 @@ fun DetailScreen(
                                 Text(
                                     text = detailView.recipeName,
                                     fontSize = 24.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.background
                                 )
                                 IconButton(onClick = {
                                     detailViewModel.insertFavorite(
@@ -161,7 +170,8 @@ fun DetailScreen(
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.FavoriteBorder,
-                                        contentDescription = ""
+                                        contentDescription = "",
+                                        tint = MaterialTheme.colorScheme.background
                                     )
                                 }
                             }
@@ -171,12 +181,14 @@ fun DetailScreen(
                             Text(
                                 text = "Bahan-bahan:",
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.background
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = detailView.ingredients,
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.background
                             )
 
                             //Bagian Langkah Pembuatan (Steps)
@@ -184,18 +196,22 @@ fun DetailScreen(
                             Text(
                                 text = "Langkah Pembuatan:",
                                 fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.background
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
                                 text = detailView.steps,
-                                fontSize = 15.sp
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.background
                             )
+                            Spacer(modifier = Modifier.size(16.dp))
                         }
                     }
                 },
                 onError = { _, _ ->
-                    Toast.makeText(context, "Eror ketika menampilkan detail", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Eror ketika menampilkan detail", Toast.LENGTH_SHORT)
+                        .show()
                 }
             )
         }
