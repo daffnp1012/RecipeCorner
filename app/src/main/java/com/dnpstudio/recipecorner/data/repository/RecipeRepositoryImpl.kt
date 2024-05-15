@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.data.repository
 
+import android.net.Uri
 import android.util.Log
 import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDatabase
@@ -48,6 +49,10 @@ class RecipeRepositoryImpl @Inject constructor(
 
     override suspend fun deleteFavorite(favorite: Favorite) {
         return favoriteDatabase.favoriteDao().deleteFavorite(favorite)
+    }
+
+    override suspend fun uploadFile(recipeName: String, file: Uri): String {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getRecipe(): Result<Flow<List<Recipe>>> {

@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.data.repository.RecipeRepository
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeItem(
     recipeName: String,

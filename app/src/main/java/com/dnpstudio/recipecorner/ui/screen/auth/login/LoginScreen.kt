@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.ui.screen.auth.login
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.RegisterScreenDestination
 import com.dnpstudio.recipecorner.utils.emailChecked
 import com.ramcosta.composedestinations.annotation.Destination
@@ -248,10 +250,10 @@ fun LoginScreen(
                 }
             },
             onSuccess = {
-
+                navigator.navigate(HomeScreenDestination)
             },
-            onError = { _, _ ->
-
+            onError = { it, _ ->
+                Toast.makeText(context, "Terjadi kesalahan saat login", Toast.LENGTH_SHORT).show()
             }
         )
     }

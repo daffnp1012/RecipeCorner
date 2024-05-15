@@ -17,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,12 +38,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.dnpstudio.recipecorner.ui.screen.detail.DetailArguments
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -108,6 +110,18 @@ fun UpdateRecipeScreen(
 
             LazyColumn {
                 item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        AsyncImage(
+                            model = null,
+                            contentDescription = ""
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(16.dp))
                     OutlinedTextField(
                         value = updateRecipeName,
                         label = {
@@ -212,15 +226,10 @@ fun UpdateRecipeScreen(
                             )
                         }
                         updateRecipeState.value.DisplayResult(
-                            onLoading = {
-                                LinearProgressIndicator(
-                                    modifier = Modifier
-                                        .padding(vertical = 16.dp)
-                                )
-                            },
+                            onLoading = {},
                             onSuccess = {
                                 navigator.navigateUp()
-                                Toast.makeText(context, "Update terlaksanakan", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Berhasil meng-update resep", Toast.LENGTH_SHORT).show()
                             },
                             onError = { it, _ ->
                                 Toast.makeText(

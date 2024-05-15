@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    repository: RecipeRepository
+    private val repository: RecipeRepository
 ): ViewModel() {
 
     val favoriteState = repository.getFavoriteList().stateIn(
@@ -21,10 +21,10 @@ class ProfileViewModel @Inject constructor(
         emptyList()
     )
 
-//    fun deleteFavorite(favorite: Favorite){
-//        viewModelScope.launch {
-//
-//        }
-//    }
+    fun deleteFavorite(favorite: Favorite){
+        viewModelScope.launch {
+            repository.deleteFavorite(favorite)
+        }
+    }
 
 }

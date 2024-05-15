@@ -29,7 +29,7 @@ fun SplashScreen(
 ) {
     LaunchedEffect(true){
         delay(2000)
-        navigator.navigate(HomeScreenDestination)
+        navigator.navigate(RegisterScreenDestination)
     }
 
     Column(

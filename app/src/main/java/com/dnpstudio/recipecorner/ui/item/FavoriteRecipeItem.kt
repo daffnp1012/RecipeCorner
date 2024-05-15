@@ -1,6 +1,7 @@
 package com.dnpstudio.recipecorner.ui.item
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,26 +21,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dnpstudio.recipecorner.R
-import com.dnpstudio.recipecorner.ui.screen.profile.ProfileViewModel
 
 @Composable
 fun FavoriteRecipeItem(
-    favId: Int,
     favRecipeName: String,
-) {
+    onClick: () -> Unit,
+    onDelete: () -> Unit
+ ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .height(72.dp),
+            .height(72.dp)
+            .clickable { onClick() },
         colors = CardDefaults.cardColors(
             MaterialTheme.colorScheme.primary
-        )
+        ),
     ) {
         Row(
             modifier = Modifier
@@ -53,7 +53,7 @@ fun FavoriteRecipeItem(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 IconButton(
-                    onClick = {}
+                    onClick = {onDelete()}
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -74,9 +74,3 @@ fun FavoriteRecipeItem(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun FavoriteRecipeItemPreview() {
-//    FavoriteRecipeItem(favId = 0, favRecipeName = "Nama Resep")
-//}

@@ -2,6 +2,7 @@ package com.dnpstudio.recipecorner.ui.screen.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -128,10 +129,15 @@ fun HomeScreen(
                         if (recipeList.isEmpty()) {
                             Column(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .align(Alignment.Center)
+                                    .fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
                             ) {
-                                Text(text = "Belum ada resep :(")
+                                Text(
+                                    text = "Belum ada resep :(",
+                                    fontSize = 24.sp,
+                                    color = MaterialTheme.colorScheme.background
+                                )
                             }
                         } else {
                             Column(

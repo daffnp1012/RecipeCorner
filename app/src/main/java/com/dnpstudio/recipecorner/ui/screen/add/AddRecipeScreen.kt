@@ -236,19 +236,10 @@ fun AddRecipeScreen(
                     }
 
                     addRecipeState.DisplayResult(
-                        onLoading = {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp)
-                            ) {
-                                CircularProgressIndicator()
-                            }
-                        },
+                        onLoading = {},
                         onSuccess = {
-                            navigator.popBackStack()
-                            Toast.makeText(context, "Sukses menambahkan resep", Toast.LENGTH_SHORT)
-                                .show()
+                            navigator.navigateUp()
+                            Toast.makeText(context, "Berhasil menambahkan resep", Toast.LENGTH_SHORT).show()
                         },
                         onError = { it, _ ->
                             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()

@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.ui.screen.detail
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -163,10 +164,13 @@ fun DetailScreen(
                                 IconButton(onClick = {
                                     detailViewModel.insertFavorite(
                                         Favorite(
-                                            id = null,
-                                            favRecipeName = detailView.recipeName
+                                            id = detailState.value.getSuccessData().id,
+                                            favRecipeName = detailState.value.getSuccessData().recipeName,
+                                            favIngredients = detailState.value.getSuccessData().ingredients,
+                                            favSteps = detailState.value.getSuccessData().steps
                                         )
                                     )
+                                    Toast.makeText(context, "Berhasil ditambahkan ke favorit", Toast.LENGTH_SHORT).show()
                                 }) {
                                     Icon(
                                         imageVector = Icons.Default.FavoriteBorder,
@@ -209,9 +213,9 @@ fun DetailScreen(
                         }
                     }
                 },
-                onError = { _, _ ->
-                    Toast.makeText(context, "Eror ketika menampilkan detail", Toast.LENGTH_SHORT)
-                        .show()
+                onError = { it, _ ->
+                    Toast.makeText(context, "Eror ketika menampilkan detail", Toast.LENGTH_SHORT).show()
+                    Log.d("DETAIL", it)
                 }
             )
         }

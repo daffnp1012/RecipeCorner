@@ -1,8 +1,10 @@
 package com.dnpstudio.recipecorner.data.repository
 
+import android.net.Uri
 import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.rmaprojects.apirequeststate.ResponseState
+import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
@@ -44,6 +46,8 @@ interface RecipeRepository {
     suspend fun insertFavorite(favorite: Favorite)
 
     suspend fun deleteFavorite(favorite: Favorite)
+
+    suspend fun uploadFile(recipeName: String, file: Uri): String
 
 
 }

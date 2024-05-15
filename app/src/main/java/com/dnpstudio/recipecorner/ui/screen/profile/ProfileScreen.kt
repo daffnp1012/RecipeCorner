@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.ui.screen.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,15 +14,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
@@ -37,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -46,7 +49,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.preference.KotPref
 import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
+import com.dnpstudio.recipecorner.ui.screen.destinations.DetailScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.EditProfileScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.detail.DetailArguments
 import com.dnpstudio.recipecorner.utils.GlobalState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -64,6 +69,7 @@ fun ProfileScreen(
     }
 
     val favoriteList = viewModel.favoriteState.collectAsStateWithLifecycle().value
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -97,6 +103,7 @@ fun ProfileScreen(
                             text = "Dark Mode",
                             color = MaterialTheme.colorScheme.background
                         )
+                        Spacer(modifier = Modifier.size(12.dp))
                         Switch(
                             checked = checked,
                             onCheckedChange = {
@@ -116,6 +123,7 @@ fun ProfileScreen(
                 .padding(it)
                 .background(MaterialTheme.colorScheme.secondary),
         ) {
+            Spacer(modifier = Modifier.size(16.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -138,12 +146,24 @@ fun ProfileScreen(
                 }
                 Spacer(modifier = Modifier.size(24.dp))
                 Column{
-                    Text(
-                        text = "Username",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.background
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
+                            text = "Username",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.background
+                        )
+                        Spacer(modifier = Modifier.size(12.dp))
+                        IconButton(onClick = {}) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Logout,
+                                contentDescription = "",
+                                tint = MaterialTheme.colorScheme.background
+                            )
+                        }
+                    }
                     Spacer(modifier = Modifier.size(12.dp))
                     Button(
                         onClick = {navigator.navigate(EditProfileScreenDestination)},
@@ -161,10 +181,10 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(16.dp))
             HorizontalDivider(
                 modifier = Modifier
-                    .height(6.dp)
                     .padding(horizontal = 16.dp)
                     .clip(shape = RoundedCornerShape(5.dp)),
-                color = Color(0xFF8C6A5D)
+                color = MaterialTheme.colorScheme.primary,
+                thickness = 6.dp
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -180,13 +200,30 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             LazyColumn{
-                items(favoriteList.size){
+                items(favoriteList.size){ count ->
 
-                    val favorite = favoriteList.get(it)
+                    val favorite = favoriteList.get(count)
 
                     FavoriteRecipeItem(
-                        favId = favorite.id!!,
-                        favRecipeName = favorite.favRecipeName
+                        favRecipeName = favorite.favRecipeName,
+                        onClick = {
+                            navigator.navigate(
+                                DetailScreenDestination(
+                                    navArgs =  DetailArguments(
+                                        id = favorite.id,
+                                        recipeName = favorite.favRecipeName,
+                                        ingredients = favorite.favIngredients,
+                                        steps = favorite.favSteps
+                                    )
+                                )
+                            )
+                        },
+                        onDelete = {
+                            viewModel.deleteFavorite(
+                                favorite
+                            )
+                            Toast.makeText(context, "Berhasil menghapus resep favorit", Toast.LENGTH_SHORT).show()
+                        }
                     )
 
                 }
