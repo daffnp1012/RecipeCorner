@@ -253,7 +253,7 @@ fun LoginScreen(
                 navigator.navigate(HomeScreenDestination)
             },
             onError = { it, _ ->
-                Toast.makeText(context, "Terjadi kesalahan saat login", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
             }
         )
     }

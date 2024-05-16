@@ -1,5 +1,6 @@
 package com.dnpstudio.recipecorner.ui.screen.home
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,12 +35,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dnpstudio.recipecorner.preference.Preferences
 import com.dnpstudio.recipecorner.ui.item.RecipeItem
 import com.dnpstudio.recipecorner.ui.item.SearchRecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.AddRecipeScreenDestination
@@ -61,9 +63,9 @@ fun HomeScreen(
 
     val searchText by homeViewModel.searchText.collectAsState()
     val isSearching by homeViewModel.isSearching.collectAsState()
-//    val context = LocalContext.current
+    val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(true) {
         homeViewModel.onRealtimeRecipeList()
     }
 
@@ -72,8 +74,9 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Home",
-                        color = MaterialTheme.colorScheme.background
+                        text = "RecipeCorner",
+                        color = MaterialTheme.colorScheme.background,
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -124,8 +127,9 @@ fun HomeScreen(
                             CircularProgressIndicator()
                         }
                     },
+                    //Ketika sukses...
                     onSuccess = { recipeList ->
-
+                        //Apabila belum ada resep...
                         if (recipeList.isEmpty()) {
                             Column(
                                 modifier = Modifier
@@ -139,12 +143,13 @@ fun HomeScreen(
                                     color = MaterialTheme.colorScheme.background
                                 )
                             }
+                            //Jika sudah ada resep...
                         } else {
                             Column(
                                 modifier = Modifier
                                     .fillMaxSize()
                             ) {
-
+                                //SearchBar untuk mencari resep...
                                 SearchBar(
                                     query = searchText,
                                     onQueryChange = homeViewModel::onSearchTextChange,
@@ -173,7 +178,9 @@ fun HomeScreen(
                                     )
                                 ) {
                                     Column {
+                                        //Hasil tempilan
                                         homeState.value.DisplayResult(
+                                            //Ketika Loading...
                                             onLoading = {
                                                 Box(
                                                     modifier = Modifier
@@ -183,9 +190,10 @@ fun HomeScreen(
                                                     CircularProgressIndicator()
                                                 }
                                             },
+                                            //Ketika sukses...
                                             onSuccess = {
                                                 LazyColumn {
-                                                    items(it.filter {
+                                                    items(it.filter  {
                                                         it.recipeName.contains(
                                                             searchText,
                                                             true
@@ -199,6 +207,7 @@ fun HomeScreen(
                                                                         navArgs = DetailArguments(
                                                                             id = recipe.id,
                                                                             recipeName = recipe.recipeName,
+                                                                            recipeImg = recipe.recipeImg,
                                                                             ingredients = recipe.ingredients,
                                                                             steps = recipe.steps
                                                                         )
@@ -209,15 +218,16 @@ fun HomeScreen(
                                                     }
                                                 }
                                             },
-                                            onError = { _, _ ->
-
+                                            //Ketika terjadi eror...
+                                            onError = { it, _ ->
+                                                Toast.makeText(context, "Terjadi kesalahan saat memuat resep", Toast.LENGTH_SHORT).show()
                                             }
                                         )
                                     }
                                 }
 
                                 Text(
-                                    text = "Halo! Pengguna",
+                                    text = "Halo! ${Preferences.username ?: ""}",
                                     fontSize = 36.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.background,
@@ -247,22 +257,28 @@ fun HomeScreen(
 
                                         RecipeItem(
                                             recipeName = recipe.recipeName,
+                                            recipeImg = recipe.recipeImg,
                                             onClick = {
                                                 navigator.navigate(
                                                     DetailScreenDestination(
                                                         DetailArguments(
                                                             id = recipe.id,
                                                             recipeName = recipe.recipeName,
+                                                            recipeImg = recipe.recipeImg,
                                                             ingredients = recipe.ingredients,
                                                             steps = recipe.steps
                                                         )
                                                     )
                                                 )
-                                            },
-                                            onDelete = {
-                                                homeViewModel.deleteRecipe(recipe.id!!)
                                             }
-                                        )
+                                        ) {
+                                            homeViewModel.deleteRecipe(recipe.id!!)
+                                            Toast.makeText(
+                                                context,
+                                                "Berhasil menghapus resep",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
                                 }
                             }

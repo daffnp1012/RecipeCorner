@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,6 +29,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -38,7 +40,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,14 +48,18 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.R
-import com.dnpstudio.recipecorner.preference.KotPref
+import com.dnpstudio.recipecorner.preference.Preferences
 import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.DetailScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.EditProfileScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.LoginScreenDestination
+import com.dnpstudio.recipecorner.ui.screen.destinations.ProfileScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.detail.DetailArguments
 import com.dnpstudio.recipecorner.utils.GlobalState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination
@@ -66,6 +71,10 @@ fun ProfileScreen(
 
     var checked by remember {
         mutableStateOf(true)
+    }
+
+    var showAlertDialog by remember {
+        mutableStateOf(false)
     }
 
     val favoriteList = viewModel.favoriteState.collectAsStateWithLifecycle().value
@@ -109,7 +118,7 @@ fun ProfileScreen(
                             onCheckedChange = {
                                 checked = it
                                 GlobalState.isDarkMode = it
-                                KotPref.isDarkMode = it
+                                Preferences.isDarkMode = it
                             }
                         )
                     }
@@ -130,43 +139,74 @@ fun ProfileScreen(
                     .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .padding(start = 12.dp)
-                        .clip(shape = RoundedCornerShape(15.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.user_icon),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .size(64.dp)
-                    )
-                }
+
                 Spacer(modifier = Modifier.size(24.dp))
                 Column{
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
-                            text = "Username",
-                            fontSize = 24.sp,
+                            text = Preferences.username ?: "",
+                            fontSize = 32.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.background
                         )
                         Spacer(modifier = Modifier.size(12.dp))
-                        IconButton(onClick = {}) {
+                        IconButton(onClick = {
+                            showAlertDialog = true
+                        }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.Logout,
                                 contentDescription = "",
-                                tint = MaterialTheme.colorScheme.background
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
+                        if (showAlertDialog){
+                            AlertDialog(
+                                title = { Text(text = "Keluar")},
+                                text = { Text(text = "Apakah anda ingin keluar dari akun yang sekarang?")},
+                                onDismissRequest = {showAlertDialog = false},
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            Preferences.id = null
+                                            Preferences.username = null
+                                            navigator.navigate(LoginScreenDestination){
+                                                popUpTo(ProfileScreenDestination){
+                                                    inclusive = true
+                                                }
+                                                popUpTo(HomeScreenDestination){
+                                                    inclusive = true
+                                                }
+                                                launchSingleTop = true
+                                            }
+                                        }
+                                    ) {
+                                        Text(text = "Iya")
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = {
+                                            showAlertDialog = false
+                                        }
+                                    ) {
+                                        Text(text = "Tidak")
+                                    }
+                                }
                             )
                         }
                     }
                     Spacer(modifier = Modifier.size(12.dp))
                     Button(
-                        onClick = {navigator.navigate(EditProfileScreenDestination)},
+                        onClick = {
+                            navigator.navigate(EditProfileScreenDestination(
+                                ProfileArguments(
+                                    id = Preferences.id ?: "",
+                                    username = Preferences.username ?: ""
+                                )
+                            ))
+                        },
                         colors = ButtonDefaults.buttonColors(
                             MaterialTheme.colorScheme.primary
                         )
@@ -206,12 +246,14 @@ fun ProfileScreen(
 
                     FavoriteRecipeItem(
                         favRecipeName = favorite.favRecipeName,
+                        favRecipeImg = favorite.favRecipeImg,
                         onClick = {
                             navigator.navigate(
                                 DetailScreenDestination(
                                     navArgs =  DetailArguments(
                                         id = favorite.id,
                                         recipeName = favorite.favRecipeName,
+                                        recipeImg = favorite.favRecipeImg,
                                         ingredients = favorite.favIngredients,
                                         steps = favorite.favSteps
                                     )
@@ -232,3 +274,8 @@ fun ProfileScreen(
         }
     }
 }
+
+data class  ProfileArguments(
+    val id: String,
+    val username: String
+)

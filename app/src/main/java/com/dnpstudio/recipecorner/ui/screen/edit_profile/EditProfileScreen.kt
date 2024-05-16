@@ -1,5 +1,7 @@
 package com.dnpstudio.recipecorner.ui.screen.edit_profile
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,26 +37,37 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dnpstudio.recipecorner.R
+import com.dnpstudio.recipecorner.ui.screen.profile.ProfileArguments
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination
+@Destination(navArgsDelegate = ProfileArguments::class)
 @Composable
 fun EditProfileScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    viewModel: EditProfileViewModel = hiltViewModel()
 ) {
 
     var editProfileName by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(viewModel.navArgs.username))
+    }
+
+    val editProfileState = viewModel.editProfileState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+
+    BackHandler(editProfileState.value.isLoading()) {
+
     }
 
     Scaffold(
@@ -91,48 +105,10 @@ fun EditProfileScreen(
                 .background(MaterialTheme.colorScheme.secondary),
         ) {
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box {
-                    Card(
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(shape = CircleShape)
-                    ){
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(shape = CircleShape),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.user_icon),
-                                contentDescription = "",
-                                modifier = Modifier
-                                    .size(72.dp)
-                            )
-                        }
-                    }
-                    Icon(
-                        imageVector = Icons.Default.AddCircle,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .size(32.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.size(24.dp))
-
             Text(
                 text = "Username",
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp,
+                fontSize = 24.sp,
                 color = MaterialTheme.colorScheme.background,
                 modifier = Modifier
                     .padding(16.dp)
@@ -156,7 +132,12 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.size(20.dp))
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    viewModel.editProfile(
+                        id = viewModel.navArgs.id,
+                        username = editProfileName.text
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
@@ -169,7 +150,18 @@ fun EditProfileScreen(
                     color = MaterialTheme.colorScheme.background
                 )
             }
-
+            editProfileState.value.DisplayResult(
+                onLoading = {
+                    CircularProgressIndicator()
+                },
+                onSuccess = {
+                    Toast.makeText(context, "Profil berhasil di-edit", Toast.LENGTH_SHORT).show()
+                    navigator.navigateUp()
+                },
+                onError = { it, _ ->
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                }
+            )
         }
     }
 }

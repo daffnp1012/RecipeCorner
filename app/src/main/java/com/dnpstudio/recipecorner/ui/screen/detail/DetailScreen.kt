@@ -2,7 +2,6 @@ package com.dnpstudio.recipecorner.ui.screen.detail
 
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -37,7 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.ui.screen.destinations.UpdateRecipeScreenDestination
@@ -99,6 +98,7 @@ fun DetailScreen(
                                 DetailArguments(
                                     id = detailState.value.getSuccessData().id,
                                     recipeName = detailState.value.getSuccessData().recipeName,
+                                    recipeImg = detailState.value.getSuccessData().recipeImg,
                                     ingredients = detailState.value.getSuccessData().ingredients,
                                     steps = detailState.value.getSuccessData().steps
                                 )
@@ -141,14 +141,17 @@ fun DetailScreen(
                     ) {
                         item {
                             Spacer(modifier = Modifier.size(16.dp))
-                            Image(
-                                painter = painterResource(id = R.drawable.food_img_1),
+                            AsyncImage(
+                                model = detailView.recipeImg,
                                 contentDescription = "",
+                                fallback = painterResource(id = R.drawable.food_img_1),
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(240.dp)
                                     .clip(shape = RoundedCornerShape(15.dp))
                             )
+                            Spacer(modifier = Modifier.size(16.dp))
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth(),
@@ -166,6 +169,7 @@ fun DetailScreen(
                                         Favorite(
                                             id = detailState.value.getSuccessData().id,
                                             favRecipeName = detailState.value.getSuccessData().recipeName,
+                                            favRecipeImg = detailState.value.getSuccessData().recipeImg,
                                             favIngredients = detailState.value.getSuccessData().ingredients,
                                             favSteps = detailState.value.getSuccessData().steps
                                         )
@@ -173,7 +177,7 @@ fun DetailScreen(
                                     Toast.makeText(context, "Berhasil ditambahkan ke favorit", Toast.LENGTH_SHORT).show()
                                 }) {
                                     Icon(
-                                        imageVector = Icons.Default.FavoriteBorder,
+                                        imageVector = Icons.Default.Favorite,
                                         contentDescription = "",
                                         tint = MaterialTheme.colorScheme.background
                                     )

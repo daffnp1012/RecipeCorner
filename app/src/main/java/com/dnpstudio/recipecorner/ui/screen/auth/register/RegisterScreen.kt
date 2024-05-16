@@ -34,7 +34,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -45,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dnpstudio.recipecorner.preference.KotPref
+import com.dnpstudio.recipecorner.preference.Preferences
 import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.LoginScreenDestination
 import com.dnpstudio.recipecorner.utils.emailChecked
@@ -60,8 +59,8 @@ fun RegisterScreen(
 ) {
 
     LaunchedEffect(true) {
-        if (KotPref.id.isNotEmpty()) {
-            navigator.navigate(LoginScreenDestination)
+        if (Preferences.id != null) {
+            navigator.navigate(HomeScreenDestination)
         }
     }
 
@@ -80,8 +79,11 @@ fun RegisterScreen(
             .background(MaterialTheme.colorScheme.secondary)
     ) {
 
+        //Nilai untuk textfield username
         var username by remember { (mutableStateOf(TextFieldValue(""))) }
+        //Nilai untuk textfield email
         var email by remember { (mutableStateOf(TextFieldValue(""))) }
+        //Nilai untuk textfield password
         var password by remember { (mutableStateOf(TextFieldValue(""))) }
         
         Spacer(modifier = Modifier.size(64.dp))
@@ -168,7 +170,8 @@ fun RegisterScreen(
                     focusedPlaceholderColor = MaterialTheme.colorScheme.background,
                     unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
                     focusedTextColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.background
+                    unfocusedTextColor = MaterialTheme.colorScheme.background,
+                    errorTextColor = MaterialTheme.colorScheme.error
                 )
             )
             Spacer(modifier = Modifier.height(6.dp))
@@ -223,7 +226,7 @@ fun RegisterScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -288,9 +291,3 @@ fun RegisterScreen(
 
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun RegisterScreenPreview() {
-//    RegisterScreen()
-//}

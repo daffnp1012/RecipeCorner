@@ -1,20 +1,20 @@
 package com.dnpstudio.recipecorner.ui.item
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,15 +22,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.dnpstudio.recipecorner.R
-import com.dnpstudio.recipecorner.data.repository.RecipeRepository
+import coil.compose.AsyncImage
+import coil.request.CachePolicy
+import coil.request.ImageRequest
 
 @Composable
 fun RecipeItem(
     recipeName: String,
+    recipeImg: String,
     onClick: () -> Unit,
     onDelete: () -> Unit
 ) {
@@ -43,7 +45,7 @@ fun RecipeItem(
         colors = CardDefaults.cardColors(
             MaterialTheme.colorScheme.primary
         ),
-        onClick = { onClick() }
+        onClick = { onClick() },
     ) {
         Row(
             modifier = Modifier
@@ -59,7 +61,7 @@ fun RecipeItem(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "",
-                        tint = MaterialTheme.colorScheme.background
+                        tint = MaterialTheme.colorScheme.error
                     )
                 }
                 Spacer(modifier = Modifier.size(16.dp))
@@ -68,10 +70,22 @@ fun RecipeItem(
                     color = MaterialTheme.colorScheme.background
                 )
             }
-            Image(
-                painter = painterResource(id = R.drawable.food_img_1),
-                contentDescription = ""
-            )
+            Box(
+                modifier = Modifier
+                    .width(120.dp)
+                    .fillMaxHeight()
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(recipeImg)
+                        .crossfade(true)
+                        .memoryCachePolicy(CachePolicy.DISABLED)
+                        .build(),
+                    contentDescription = "",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }

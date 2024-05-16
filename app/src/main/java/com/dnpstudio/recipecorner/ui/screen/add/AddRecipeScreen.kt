@@ -1,7 +1,11 @@
 package com.dnpstudio.recipecorner.ui.screen.add
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -43,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
+import com.dnpstudio.recipecorner.preference.Preferences
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -100,6 +106,17 @@ fun AddRecipeScreen(
             mutableStateOf(TextFieldValue(""))
         }
 
+        var selectedImageUri by remember {
+            mutableStateOf<Uri?>(null)
+        }
+
+        val singlePhotoClicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = {
+                selectedImageUri = it
+            }
+        )
+
         Spacer(modifier = Modifier.size(24.dp))
 
         Column(
@@ -114,16 +131,24 @@ fun AddRecipeScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(100.dp)
+                            .height(200.dp)
                             .padding(horizontal = 16.dp)
+                            .padding(top = 16.dp),
+                        onClick = {
+                            singlePhotoClicker.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }
                     ) {
                         AsyncImage(
-                            model = null,
-                            contentDescription = ""
+                            model = selectedImageUri,
+                            contentDescription = "",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
                         )
                     }
 
-                    Spacer(modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.size(24.dp))
 
                     //Kolom untuk mengisi nama resep
                     OutlinedTextField(
@@ -214,6 +239,9 @@ fun AddRecipeScreen(
                             onClick = {
                                 viewModel.addRecipe(
                                     Recipe(
+                                        id = null,
+                                        recipeHolder = Preferences.id ?: "",
+                                        recipeImg = selectedImageUri.toString(),
                                         recipeName = recipeName.text,
                                         ingredients = ingredients.text,
                                         steps = steps.text
@@ -236,14 +264,15 @@ fun AddRecipeScreen(
                     }
 
                     addRecipeState.DisplayResult(
-                        onLoading = {},
+                        onLoading = {
+                            CircularProgressIndicator()
+                        },
                         onSuccess = {
                             navigator.navigateUp()
                             Toast.makeText(context, "Berhasil menambahkan resep", Toast.LENGTH_SHORT).show()
                         },
                         onError = { it, _ ->
-                            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                            Log.d("ADD", it)
+                            Toast.makeText(context, "Gagal menambahkan resep", Toast.LENGTH_SHORT).show()
                         }
                     )
 

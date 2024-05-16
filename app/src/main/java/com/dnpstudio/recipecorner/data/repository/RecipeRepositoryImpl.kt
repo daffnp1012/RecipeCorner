@@ -7,17 +7,18 @@ import com.dnpstudio.recipecorner.data.source.local.favorite.FavoriteDatabase
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.dnpstudio.recipecorner.data.source.remote.User
 import com.dnpstudio.recipecorner.data.tables.SupabaseTables
-import com.dnpstudio.recipecorner.preference.KotPref
+import com.dnpstudio.recipecorner.preference.Preferences
 import com.rmaprojects.apirequeststate.ResponseState
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.postgresListDataFlow
 import io.github.jan.supabase.realtime.postgresSingleDataFlow
 import io.github.jan.supabase.realtime.realtime
+import io.github.jan.supabase.storage.storage
+import io.github.jan.supabase.storage.upload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -52,7 +53,28 @@ class RecipeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun uploadFile(recipeName: String, file: Uri): String {
-        TODO("Not yet implemented")
+        client.storage
+            .from("photos")
+            .upload("${Preferences.username}/$recipeName.png", file, true)
+        val result = client.storage
+            .from("photos")
+            .publicUrl("${Preferences.username}/$recipeName.png")
+        return result
+    }
+
+    override suspend fun editProfile(id: String, username: String): Flow<ResponseState<Boolean>> {
+        return flow {
+            client.from("users").update(
+                update = {
+                    set("username", username)
+                },
+                request = {
+                    filter {
+                        eq("id", id)
+                    }
+                }
+            )
+        }
     }
 
     override suspend fun getRecipe(): Result<Flow<List<Recipe>>> {
@@ -123,7 +145,7 @@ class RecipeRepositoryImpl @Inject constructor(
                         User::id eq user?.id
                     }
                 }.decodeSingle<User>()
-            KotPref.apply {
+            Preferences.apply {
                 this.id = publicUser.id.toString()
                 this.username = publicUser.username
                 this.email = publicUser.email
@@ -131,6 +153,7 @@ class RecipeRepositoryImpl @Inject constructor(
             emit(ResponseState.Success(true))
         } catch (e: Exception) {
             emit(ResponseState.Error(e.toString()))
+            Log.d("REPO_REGISTER", e.toString())
         }
 
     }
@@ -151,7 +174,7 @@ class RecipeRepositoryImpl @Inject constructor(
                         User::id eq user!!.id
                     }
                 }.decodeSingle<User>()
-            KotPref.apply {
+            Preferences.apply {
                 this.id = publicUser.id.toString()
                 this.username = publicUser.username
                 this.email = publicUser.email
@@ -159,6 +182,7 @@ class RecipeRepositoryImpl @Inject constructor(
             emit(ResponseState.Success(true))
         } catch (e: Exception){
             emit(ResponseState.Error(e.toString()))
+            Log.d("REPO_LOGIN", e.toString())
         }
     }
 
@@ -176,26 +200,28 @@ class RecipeRepositoryImpl @Inject constructor(
     }
 
     override fun updateRecipe(
-        id: Int,
-        recipeImg: String,
-        recipeName: String,
-        ingredients: String,
-        steps: String
+        recipe: Recipe
     ): Flow<ResponseState<Boolean>> {
         return flow {
-            client.from("recipe").update(
-                update = {
-                    set("recipe_img", recipeImg)
-                    set("recipe_name", recipeName)
-                    set("ingredients", ingredients)
-                    set("steps", steps)
-                },
-                request = {
-                    filter {
-                        eq("id", id)
+            emit(ResponseState.Loading)
+            try {
+                client.from("recipe").update(
+                    update = {
+                        set("recipe_img", recipe.recipeImg)
+                        set("recipe_name", recipe.recipeName)
+                        set("ingredients", recipe.ingredients)
+                        set("steps", recipe.steps)
+                    },
+                    request = {
+                        filter {
+                            eq("id", recipe.id!!)
+                        }
                     }
-                }
-            )
+                )
+                emit(ResponseState.Success(true))
+            } catch (e: Exception) {
+                emit(ResponseState.Error(e.message.toString()))
+            }
         }
     }
 

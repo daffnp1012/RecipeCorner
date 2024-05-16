@@ -19,11 +19,7 @@ interface RecipeRepository {
 
 
     fun updateRecipe(
-        id: Int,
-        recipeImg: String,
-        recipeName: String,
-        ingredients: String,
-        steps: String
+        recipe: Recipe
     ): Flow<ResponseState<Boolean>>
 
     fun deleteRecipe(id: Int): Flow<ResponseState<List<Recipe>>>
@@ -48,6 +44,8 @@ interface RecipeRepository {
     suspend fun deleteFavorite(favorite: Favorite)
 
     suspend fun uploadFile(recipeName: String, file: Uri): String
+
+    suspend fun editProfile(id: String, username: String): Flow<ResponseState<Boolean>>
 
 
 }
