@@ -23,7 +23,8 @@ class HomeViewModel @Inject constructor(
     private val repository: RecipeRepository
 ) : ViewModel() {
 
-    private val _recipeListState = MutableStateFlow<ResponseState<List<Recipe>>>(
+    private val _recipeListState =
+        MutableStateFlow<ResponseState<List<Recipe>>>(
         ResponseState.Loading
     )
 
@@ -41,11 +42,7 @@ class HomeViewModel @Inject constructor(
             SharingStarted.WhileSubscribed(3000),
             ResponseState.Loading
         )
-
-    val recipeList = mutableStateListOf<Recipe>()
-
     fun onRealtimeRecipeList() {
-
         viewModelScope.launch(Dispatchers.IO) {
             repository.getRecipe().onSuccess { flow ->
                     flow.onEach {
@@ -57,22 +54,17 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
-
     fun leaveRealtimeChannel() = viewModelScope.launch {
         repository.unsubcribeChannel()
     }
-
     fun deleteRecipe(id: Int) {
         viewModelScope.launch {
             repository.deleteRecipe(id).collect()
         }
     }
-
-    //Search
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
-
     fun onToogleSearch() {
         _isSearching.value = !_isSearching.value
         if (!_isSearching.value) {

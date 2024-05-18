@@ -17,7 +17,6 @@ interface RecipeRepository {
         recipe: Recipe
     ): Flow<ResponseState<Recipe>>
 
-
     fun updateRecipe(
         recipe: Recipe
     ): Flow<ResponseState<Boolean>>

@@ -126,7 +126,6 @@ class RecipeRepositoryImpl @Inject constructor(
         email: String,
         password: String
     ): Flow<ResponseState<Boolean>> = flow {
-
         emit(ResponseState.Loading)
         try {
             client.auth.signUpWith(Email) {
@@ -136,7 +135,6 @@ class RecipeRepositoryImpl @Inject constructor(
                     put("username", username)
                 }
             }
-
             val user = client.auth.currentUserOrNull()
             val publicUser = client.from("users")
                 .select {
@@ -154,7 +152,6 @@ class RecipeRepositoryImpl @Inject constructor(
             emit(ResponseState.Error(e.toString()))
             Log.d("REPO_REGISTER", e.toString())
         }
-
     }
 
     override suspend fun login(email: String, password: String): Flow<ResponseState<Boolean>> = flow {

@@ -50,5 +50,4 @@ class AddRecipeViewModel @Inject constructor(
             }
         }
     }
-
 }

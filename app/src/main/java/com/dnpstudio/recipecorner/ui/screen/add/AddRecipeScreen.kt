@@ -60,14 +60,9 @@ fun AddRecipeScreen(
     navigator: DestinationsNavigator,
     viewModel: AddRecipeViewModel = hiltViewModel()
 ) {
-
     val addRecipeState by viewModel.addRecipeState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-
-    BackHandler(addRecipeState.isLoading()) {
-
-    }
-
+    BackHandler(addRecipeState.isLoading()) {}
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,36 +94,25 @@ fun AddRecipeScreen(
             )
         }
     ) {
-
-        var recipeImg by remember {
-            mutableStateOf(TextFieldValue(""))
-        }
-
         var recipeName by remember {
             mutableStateOf(TextFieldValue(""))
         }
-
         var ingredients by remember {
             mutableStateOf(TextFieldValue(""))
         }
-
         var steps by remember {
             mutableStateOf(TextFieldValue(""))
         }
-
         var selectedImageUri by remember {
             mutableStateOf<Uri?>(null)
         }
-
         val singlePhotoClicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
             onResult = {
                 selectedImageUri = it
             }
         )
-
         Spacer(modifier = Modifier.size(24.dp))
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -137,7 +121,6 @@ fun AddRecipeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyColumn{
-
                 item {
                     Card(
                         modifier = Modifier
@@ -158,9 +141,7 @@ fun AddRecipeScreen(
                             contentScale = ContentScale.Crop
                         )
                     }
-
                     Spacer(modifier = Modifier.size(24.dp))
-
                     //Kolom untuk mengisi nama resep
                     OutlinedTextField(
                         value = recipeName,
@@ -186,7 +167,6 @@ fun AddRecipeScreen(
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-
                     //Kolom untuk mengisi bahan-bahan
                     OutlinedTextField(
                         value = ingredients,
@@ -212,7 +192,6 @@ fun AddRecipeScreen(
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
-
                     //Kolom untuk mengisi langkah pembuatan
                     OutlinedTextField(
                         value = steps,
@@ -237,9 +216,7 @@ fun AddRecipeScreen(
                             unfocusedTextColor = MaterialTheme.colorScheme.background
                         )
                     )
-
                     Spacer(modifier = Modifier.size(16.dp))
-
                     Row(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -274,7 +251,6 @@ fun AddRecipeScreen(
                             )
                         }
                     }
-
                     addRecipeState.DisplayResult(
                         onLoading = {
                             CircularProgressIndicator()
@@ -288,7 +264,6 @@ fun AddRecipeScreen(
                             Log.d("ADD", it)
                         }
                     )
-
                 }
             }
         }

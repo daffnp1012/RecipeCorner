@@ -118,6 +118,7 @@ fun HomeScreen(
             ) {
 
                 homeState.value.DisplayResult(
+                    //Ketika laoding...
                     onLoading = {
                         Box(
                             modifier = Modifier
@@ -143,7 +144,7 @@ fun HomeScreen(
                                     color = MaterialTheme.colorScheme.background
                                 )
                             }
-                            //Jika sudah ada resep...
+                        //Jika sudah ada resep...
                         } else {
                             Column(
                                 modifier = Modifier
@@ -237,9 +238,7 @@ fun HomeScreen(
                                             start = 16.dp
                                         )
                                 )
-
                                 Spacer(modifier = Modifier.size(16.dp))
-
                                 Text(
                                     text = "Resep Anda",
                                     fontSize = 18.sp,
@@ -249,12 +248,9 @@ fun HomeScreen(
                                             start = 16.dp
                                         )
                                 )
-
                                 Spacer(modifier = Modifier.size(16.dp))
-
                                 LazyColumn {
                                     items(recipeList) { recipe ->
-
                                         RecipeItem(
                                             recipeName = recipe.recipeName,
                                             recipeImg = recipe.recipeImg,
@@ -285,10 +281,8 @@ fun HomeScreen(
                         }
                     },
                     onError = { _, _ ->
-
                     }
                 )
-
             }
         }
     }
