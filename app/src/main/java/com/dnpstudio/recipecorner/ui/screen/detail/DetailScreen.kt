@@ -144,7 +144,7 @@ fun DetailScreen(
                             AsyncImage(
                                 model = detailView.recipeImg,
                                 contentDescription = "",
-                                fallback = painterResource(id = R.drawable.food_img_1),
+                                fallback = painterResource(id = R.drawable.no_image),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxWidth()

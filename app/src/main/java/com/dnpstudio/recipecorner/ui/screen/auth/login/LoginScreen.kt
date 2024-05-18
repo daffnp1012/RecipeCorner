@@ -64,23 +64,18 @@ fun LoginScreen(
 
         val loginState = viewModel.loginState.collectAsStateWithLifecycle()
         val context = LocalContext.current
-
         var email by remember {
             mutableStateOf(TextFieldValue(""))
         }
-
         var password by remember {
             mutableStateOf(TextFieldValue(""))
         }
-
         var isEmailError by remember { mutableStateOf(false) }
-
         var showPassword by remember {
             mutableStateOf(false)
         }
 
         Spacer(modifier = Modifier.size(64.dp))
-
         //Judul halaman Register
         Text(
             text = "Masuk",
@@ -90,9 +85,7 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
-        
         Spacer(modifier = Modifier.size(16.dp))
-
         Text(
             text = "Mulai dengan menyambungkan akun anda",
             fontSize = 18.sp,
@@ -101,7 +94,6 @@ fun LoginScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -189,11 +181,9 @@ fun LoginScreen(
                     focusedTextColor = MaterialTheme.colorScheme.background,
                     unfocusedTextColor = MaterialTheme.colorScheme.background
                 )
-
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -213,7 +203,6 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.size(64.dp))
-        
         //BUTTON UNTUK MENYELESAIKAN LOGIN
         Row(
             modifier = Modifier

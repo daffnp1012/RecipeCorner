@@ -55,11 +55,10 @@ class RecipeRepositoryImpl @Inject constructor(
     override suspend fun uploadFile(recipeName: String, file: Uri): String {
         client.storage
             .from("photos")
-            .upload("${Preferences.username}/$recipeName.png", file, true)
-        val result = client.storage
+            .upload(recipeName, file, true)
+        return client.storage
             .from("photos")
-            .publicUrl("${Preferences.username}/$recipeName.png")
-        return result
+            .publicUrl(recipeName)
     }
 
     override suspend fun editProfile(id: String, username: String): Flow<ResponseState<Boolean>> {
@@ -146,7 +145,7 @@ class RecipeRepositoryImpl @Inject constructor(
                     }
                 }.decodeSingle<User>()
             Preferences.apply {
-                this.id = publicUser.id.toString()
+                this.id = publicUser.id
                 this.username = publicUser.username
                 this.email = publicUser.email
             }

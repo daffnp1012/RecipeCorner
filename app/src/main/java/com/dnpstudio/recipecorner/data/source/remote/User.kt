@@ -8,6 +8,5 @@ data class User(
     @SerialName("id") val id: String,
     @SerialName("created_at") val createdAt: String,
     @SerialName("username") val username: String,
-    @SerialName("img_url") val imageUrl: String?,
     @SerialName("email") val email: String
 )

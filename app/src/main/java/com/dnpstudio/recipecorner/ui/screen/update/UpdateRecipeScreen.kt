@@ -63,15 +63,15 @@ fun UpdateRecipeScreen(
 ) {
 
     var updateRecipeName by remember {
-        mutableStateOf(TextFieldValue(viewModel.navArgs.recipeName))
+        mutableStateOf(TextFieldValue(viewModel.navArgs.recipeName!!))
     }
 
     var updateIngredients by remember {
-        mutableStateOf(TextFieldValue(viewModel.navArgs.ingredients))
+        mutableStateOf(TextFieldValue(viewModel.navArgs.ingredients!!))
     }
 
     var updateSteps by remember {
-        mutableStateOf(TextFieldValue(viewModel.navArgs.steps))
+        mutableStateOf(TextFieldValue(viewModel.navArgs.steps!!))
     }
 
     var selectedImageUri by remember {
@@ -131,7 +131,7 @@ fun UpdateRecipeScreen(
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(100.dp)
+                            .height(200.dp)
                             .padding(horizontal = 16.dp),
                         onClick = {
                             singlePhotoClicker.launch(
@@ -240,8 +240,8 @@ fun UpdateRecipeScreen(
                                 viewModel.updateRecipe(
                                     recipe = Recipe(
                                         recipeName = updateRecipeName.text,
-                                        recipeImg = viewModel.navArgs.recipeImg,
-                                        ingredients = updateRecipeName.text,
+                                        recipeImg = viewModel.navArgs.recipeImg.toString(),
+                                        ingredients = updateIngredients.text,
                                         steps = updateSteps.text,
                                         id = viewModel.navArgs.id!!
                                     ),
@@ -279,6 +279,7 @@ fun UpdateRecipeScreen(
                             }
                         )
                     }
+                    Spacer(modifier = Modifier.size(16.dp))
                 }
             }
         }

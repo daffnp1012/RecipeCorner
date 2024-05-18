@@ -31,7 +31,7 @@ class AddRecipeViewModel @Inject constructor(
     fun addRecipe(recipe: Recipe, file: Uri? = null){
         viewModelScope.launch {
             _addRecipeState.emit(ResponseState.Loading)
-            if (file == null ){
+            if (file == null){
                 try {
                     repository.insertRecipe(recipe).collect()
                     _addRecipeState.emit(ResponseState.Success(true))

@@ -3,6 +3,7 @@ package com.dnpstudio.recipecorner.ui.screen.add
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -63,6 +64,10 @@ fun AddRecipeScreen(
     val addRecipeState by viewModel.addRecipeState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
+    BackHandler(addRecipeState.isLoading()) {
+
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -76,7 +81,12 @@ fun AddRecipeScreen(
                     MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(
+                        onClick = {
+                            if (!addRecipeState.isLoading()){
+                                navigator.navigateUp()
+                            }
+                        }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "",
@@ -123,7 +133,8 @@ fun AddRecipeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(MaterialTheme.colorScheme.secondary)
+                .background(MaterialTheme.colorScheme.secondary),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             LazyColumn{
 
@@ -238,14 +249,15 @@ fun AddRecipeScreen(
                         Button(
                             onClick = {
                                 viewModel.addRecipe(
-                                    Recipe(
-                                        id = null,
+                                    recipe =  Recipe(
                                         recipeHolder = Preferences.id ?: "",
-                                        recipeImg = selectedImageUri.toString(),
                                         recipeName = recipeName.text,
                                         ingredients = ingredients.text,
-                                        steps = steps.text
-                                    )
+                                        steps = steps.text,
+                                        recipeImg = selectedImageUri.toString(),
+                                        id = null
+                                    ),
+                                   file = selectedImageUri
                                 )
                             },
                             modifier = Modifier
@@ -273,6 +285,7 @@ fun AddRecipeScreen(
                         },
                         onError = { it, _ ->
                             Toast.makeText(context, "Gagal menambahkan resep", Toast.LENGTH_SHORT).show()
+                            Log.d("ADD", it)
                         }
                     )
 

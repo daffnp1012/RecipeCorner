@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,20 +29,20 @@ fun SplashScreen(
     navigator: DestinationsNavigator
 ) {
     LaunchedEffect(true){
-        delay(2000)
+        delay(2500)
         navigator.navigate(RegisterScreenDestination)
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF8C6A5D)),
+            .background(color = MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Image(
             painter = painterResource(id = R.drawable.app_logo),
-            contentDescription = ""
+            contentDescription = "",
         )
     }
 

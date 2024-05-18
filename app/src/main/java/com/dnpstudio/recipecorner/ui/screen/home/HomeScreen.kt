@@ -201,20 +201,20 @@ fun HomeScreen(
                                                     }) { recipe ->
                                                         SearchRecipeItem(
                                                             recipeName = recipe.recipeName,
-                                                            onClick = {
-                                                                navigator.navigate(
-                                                                    DetailScreenDestination(
-                                                                        navArgs = DetailArguments(
-                                                                            id = recipe.id,
-                                                                            recipeName = recipe.recipeName,
-                                                                            recipeImg = recipe.recipeImg,
-                                                                            ingredients = recipe.ingredients,
-                                                                            steps = recipe.steps
-                                                                        )
+                                                            recipeImg = recipe.recipeImg
+                                                        ) {
+                                                            navigator.navigate(
+                                                                DetailScreenDestination(
+                                                                    navArgs = DetailArguments(
+                                                                        id = recipe.id,
+                                                                        recipeName = recipe.recipeName,
+                                                                        recipeImg = recipe.recipeImg,
+                                                                        ingredients = recipe.ingredients,
+                                                                        steps = recipe.steps
                                                                     )
                                                                 )
-                                                            }
-                                                        )
+                                                            )
+                                                        }
                                                     }
                                                 }
                                             },

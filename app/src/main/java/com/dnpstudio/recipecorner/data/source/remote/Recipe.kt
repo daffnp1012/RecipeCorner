@@ -12,7 +12,7 @@ data class Recipe(
     @SerialName("id") val id: Int? = null,
     @SerialName("recipe_holder") val recipeHolder: String = Preferences.id ?: "",
     @SerialName("recipe_name") val recipeName: String,
-    @SerialName("recipe_img") val recipeImg: String,
     @SerialName("ingredients") val ingredients: String,
-    @SerialName("steps") val steps: String
+    @SerialName("steps") val steps: String,
+    @SerialName("recipe_img") val recipeImg: String
 )

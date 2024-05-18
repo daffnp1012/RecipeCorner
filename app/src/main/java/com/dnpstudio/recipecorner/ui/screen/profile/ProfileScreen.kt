@@ -1,10 +1,8 @@
 package com.dnpstudio.recipecorner.ui.screen.profile
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,13 +39,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.preference.Preferences
 import com.dnpstudio.recipecorner.ui.item.FavoriteRecipeItem
 import com.dnpstudio.recipecorner.ui.screen.destinations.DetailScreenDestination
@@ -143,7 +139,8 @@ fun ProfileScreen(
                 Spacer(modifier = Modifier.size(24.dp))
                 Column{
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        
                     ){
                         Text(
                             text = Preferences.username ?: "",
@@ -259,14 +256,17 @@ fun ProfileScreen(
                                     )
                                 )
                             )
-                        },
-                        onDelete = {
-                            viewModel.deleteFavorite(
-                                favorite
-                            )
-                            Toast.makeText(context, "Berhasil menghapus resep favorit", Toast.LENGTH_SHORT).show()
                         }
-                    )
+                    ) {
+                        viewModel.deleteFavorite(
+                            favorite
+                        )
+                        Toast.makeText(
+                            context,
+                            "Berhasil menghapus resep favorit",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
                 }
             }

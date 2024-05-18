@@ -17,7 +17,8 @@ class LoginViewModel @Inject constructor(
     private val repository: RecipeRepository
 ): ViewModel(){
 
-    private val _loginState = MutableStateFlow<ResponseState<Boolean>>(ResponseState.Idle)
+    private val _loginState =
+        MutableStateFlow<ResponseState<Boolean>>(ResponseState.Idle)
     val loginState = _loginState.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(3000),
