@@ -211,7 +211,10 @@ fun LoginScreen(
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
+                    .padding(
+                        horizontal = 32.dp,
+                        vertical = 16.dp
+                    ),
                 colors = ButtonDefaults.buttonColors(
                     MaterialTheme.colorScheme.primary
                 ),

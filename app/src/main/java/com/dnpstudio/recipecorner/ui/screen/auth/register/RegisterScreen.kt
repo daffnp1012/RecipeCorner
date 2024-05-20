@@ -139,7 +139,7 @@ fun RegisterScreen(
                     unfocusedTextColor = MaterialTheme.colorScheme.background
                 )
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
                 value = email,
                 label = {
@@ -174,7 +174,7 @@ fun RegisterScreen(
                     errorTextColor = MaterialTheme.colorScheme.error
                 )
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             OutlinedTextField(
                 value = password,
                 label = {
@@ -226,7 +226,7 @@ fun RegisterScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -246,13 +246,16 @@ fun RegisterScreen(
             }
         }
 
-        Spacer(modifier = Modifier.size(48.dp))
+        Spacer(modifier = Modifier.size(64.dp))
 
         //BUTTON UNTUK MENYELESAIKAN PEMBUATAN AKUN
         Row(
             modifier = Modifier
                 .fillMaxHeight()
-                .padding(horizontal = 16.dp),
+                .padding(
+                    horizontal = 32.dp,
+                    vertical = 16.dp
+                )
         ) {
             Button(
                 modifier = Modifier

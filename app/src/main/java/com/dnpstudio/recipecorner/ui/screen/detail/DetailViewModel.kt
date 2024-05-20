@@ -26,9 +26,7 @@ class DetailViewModel @Inject constructor(
     val repository: RecipeRepository,
     stateHandle: SavedStateHandle
 ) : ViewModel() {
-
     val navArgs: DetailArguments = stateHandle.navArgs()
-
     private val _detailState = MutableStateFlow<ResponseState<Recipe>>(
         ResponseState.Loading
     )
