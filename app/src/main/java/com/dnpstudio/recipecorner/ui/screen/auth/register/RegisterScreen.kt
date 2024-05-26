@@ -2,6 +2,7 @@ package com.dnpstudio.recipecorner.ui.screen.auth.register
 
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -44,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dnpstudio.recipecorner.R
 import com.dnpstudio.recipecorner.preference.Preferences
 import com.dnpstudio.recipecorner.ui.screen.destinations.HomeScreenDestination
 import com.dnpstudio.recipecorner.ui.screen.destinations.LoginScreenDestination
@@ -66,9 +70,7 @@ fun RegisterScreen(
 
     val registerState = viewModel.registerState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-
     var isEmailError by remember { mutableStateOf(false) }
-
     var showPassword by remember {
         mutableStateOf(false)
     }
@@ -76,221 +78,231 @@ fun RegisterScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.secondary)
+            .background(MaterialTheme.colorScheme.background)
     ) {
-
-        //Nilai untuk textfield username
-        var username by remember { (mutableStateOf(TextFieldValue(""))) }
-        //Nilai untuk textfield email
-        var email by remember { (mutableStateOf(TextFieldValue(""))) }
-        //Nilai untuk textfield password
-        var password by remember { (mutableStateOf(TextFieldValue(""))) }
-        
-        Spacer(modifier = Modifier.size(64.dp))
-
-        //Judul halaman Register
+        Spacer(modifier = Modifier.size(36.dp))
+        Image(
+            painter = painterResource(id = R.drawable.register_icon),
+            contentDescription = "",
+            colorFilter = ColorFilter.tint(
+                MaterialTheme.colorScheme.primary
+            ),
+            modifier = Modifier
+                .size(150.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+        Spacer(modifier = Modifier.size(24.dp))
         Text(
             text = "Daftar",
-            fontSize = 64.sp,
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
-
-        Spacer(modifier = Modifier.size(16.dp))
-
+        Spacer(modifier = Modifier.size(12.dp))
         Text(
             text = "Buat akun anda untuk memulai",
-            fontSize = 15.sp,
+            fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.background,
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
         )
-
+        Spacer(modifier = Modifier.size(32.dp))
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 40.dp)
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //Susunan card untuk mengisi email, password, dan konfirmasi password
-            OutlinedTextField(
-                value = username,
-                label = {
-                    Text(
-                        text = "Username",
-                        color = MaterialTheme.colorScheme.background
-                    )
-                },
-                onValueChange = {
-                    username = it
-                },
+
+            //Nilai untuk textfield username
+            var username by remember { (mutableStateOf(TextFieldValue(""))) }
+            //Nilai untuk textfield email
+            var email by remember { (mutableStateOf(TextFieldValue(""))) }
+            //Nilai untuk textfield password
+            var password by remember { (mutableStateOf(TextFieldValue(""))) }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.background,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                    focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                    focusedTextColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.background
-                )
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = email,
-                label = {
-                    Text(
-                        text = "Email",
-                        color = MaterialTheme.colorScheme.background
-                    )
-                },
-                onValueChange = {
-                    email = it
-                    isEmailError = it.text.emailChecked()
-                },
-                isError = isEmailError,
-                supportingText = {
-                    if (isEmailError) {
+            ) {
+                //Susunan card untuk mengisi email, password, dan konfirmasi password
+                OutlinedTextField(
+                    value = username,
+                    label = {
                         Text(
-                            text = "Email tidak valid",
-                            color = MaterialTheme.colorScheme.background
+                            text = "Username",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    onValueChange = {
+                        username = it
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = email,
+                    label = {
+                        Text(
+                            text = "Email",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    onValueChange = {
+                        email = it
+                        isEmailError = it.text.emailChecked()
+                    },
+                    isError = isEmailError,
+                    supportingText = {
+                        if (isEmailError) {
+                            Text(
+                                text = "Email tidak valid",
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+                OutlinedTextField(
+                    value = password,
+                    label = {
+                        Text(
+                            text = "Kata Sandi",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    onValueChange = {
+                        password = it
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password
+                    ),
+                    visualTransformation = if (showPassword) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    trailingIcon = {
+                        if (showPassword) {
+                            IconButton(onClick = { showPassword = false }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Visibility,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = { showPassword = true }) {
+                                Icon(
+                                    imageVector = Icons.Filled.VisibilityOff,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+                    },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.primary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.primary
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Sudah punya akun?",
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    TextButton(onClick = {
+                        navigator.navigate(LoginScreenDestination)
+                    }) {
+                        Text(
+                            text = "Masuk",
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontWeight = FontWeight.ExtraBold
                         )
                     }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.background,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                    focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                    focusedTextColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.background,
-                    errorTextColor = MaterialTheme.colorScheme.error
-                )
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = password,
-                label = {
-                    Text(
-                        text = "Kata Sandi",
-                        color = MaterialTheme.colorScheme.background
-                    )
-                },
-                onValueChange = {
-                    password = it
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
-                ),
-                visualTransformation = if (showPassword) {
-                    VisualTransformation.None
-                } else {
-                    PasswordVisualTransformation()
-                },
-                trailingIcon = {
-                    if (showPassword) {
-                        IconButton(onClick = { showPassword = false }) {
-                            Icon(
-                                imageVector = Icons.Filled.Visibility,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.background
-                            )
-                        }
-                    } else {
-                        IconButton(onClick = { showPassword = true }) {
-                            Icon(
-                                imageVector = Icons.Filled.VisibilityOff,
-                                contentDescription = "",
-                                tint = MaterialTheme.colorScheme.background
-                            )
-                        }
-                    }
-                },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = MaterialTheme.colorScheme.background,
-                    unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                    focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                    focusedTextColor = MaterialTheme.colorScheme.background,
-                    unfocusedTextColor = MaterialTheme.colorScheme.background
-                )
-            )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.size(36.dp))
 
+            //BUTTON UNTUK MENYELESAIKAN PEMBUATAN AKUN
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(bottom = 16.dp)
             ) {
-                Text(
-                    text = "Sudah punya akun?",
-                    color = MaterialTheme.colorScheme.background
-                )
-                TextButton(onClick = {
-                    navigator.navigate(LoginScreenDestination)
-                }) {
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp),
+                    onClick = {
+                        if (username.text.isEmpty() || email.text.isEmpty() || password.text.isEmpty()){
+                            Toast.makeText(context, "Lengkapi terlebih dahulu", Toast.LENGTH_SHORT).show()
+                            return@Button
+                        }
+                        viewModel.register(
+                            username.text,
+                            email.text,
+                            password.text
+                        )
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        MaterialTheme.colorScheme.primary
+                    )
+                ) {
                     Text(
-                        text = "Masuk",
-                        color = MaterialTheme.colorScheme.background
+                        text = "Konfirmasi",
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
-        }
-
-        Spacer(modifier = Modifier.size(64.dp))
-
-        //BUTTON UNTUK MENYELESAIKAN PEMBUATAN AKUN
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(
-                    horizontal = 32.dp,
-                    vertical = 16.dp
-                )
-        ) {
-            Button(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 32.dp),
-                onClick = {
-                    viewModel.register(username.text, email.text, password.text)
+            registerState.value.DisplayResult(
+                onLoading = {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 },
-                colors = ButtonDefaults.buttonColors(
-                    MaterialTheme.colorScheme.primary
-                )
-            ) {
-                Text(
-                    text = "Konfirmasi",
-                    color = MaterialTheme.colorScheme.background
-                )
-            }
+                onSuccess = {
+                    navigator.navigate(HomeScreenDestination)
+                },
+                onError = { it, _ ->
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    Log.d("LHEUGHA", it)
+                }
+            )
         }
-
-        registerState.value.DisplayResult(
-            onLoading = {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(vertical = 12.dp)
-                )
-            },
-            onSuccess = {
-                navigator.navigate(HomeScreenDestination)
-            },
-            onError = { it, _ ->
-                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                Log.d("LHEUGHA", it)
-            }
-        )
-
     }
 }

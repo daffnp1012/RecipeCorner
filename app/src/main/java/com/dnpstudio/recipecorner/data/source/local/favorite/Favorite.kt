@@ -3,11 +3,12 @@ package com.dnpstudio.recipecorner.data.source.local.favorite
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "favorite")
 data class Favorite(
-    @PrimaryKey(autoGenerate = true) val id: Int?,
+    @PrimaryKey(autoGenerate = false) val id: Int?,
     val favRecipeName: String,
-    val favRecipeImg: String,
+    val favRecipeHolder: String,
+    val favRecipeImg: String?,
     val favIngredients: String,
     val favSteps: String
 )

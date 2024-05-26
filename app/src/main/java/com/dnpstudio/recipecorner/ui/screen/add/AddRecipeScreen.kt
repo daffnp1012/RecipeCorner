@@ -69,16 +69,16 @@ fun AddRecipeScreen(
                 title = {
                     Text(
                         text = "Tambah Resep",
-                        color = MaterialTheme.colorScheme.background
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    MaterialTheme.colorScheme.primary
+                    MaterialTheme.colorScheme.background
                 ),
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (!addRecipeState.isLoading()){
+                            if (!addRecipeState.isLoading()) {
                                 navigator.navigateUp()
                             }
                         }) {
@@ -87,7 +87,7 @@ fun AddRecipeScreen(
                             contentDescription = "",
                             modifier = Modifier
                                 .padding(horizontal = 12.dp),
-                            tint = MaterialTheme.colorScheme.background
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -117,10 +117,10 @@ fun AddRecipeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(MaterialTheme.colorScheme.secondary),
+                .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            LazyColumn{
+            LazyColumn {
                 item {
                     Card(
                         modifier = Modifier
@@ -130,7 +130,9 @@ fun AddRecipeScreen(
                             .padding(top = 16.dp),
                         onClick = {
                             singlePhotoClicker.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
                             )
                         }
                     ) {
@@ -148,7 +150,7 @@ fun AddRecipeScreen(
                         label = {
                             Text(
                                 text = "Nama Resep",
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.primary
                             )
                         },
                         onValueChange = {
@@ -158,12 +160,12 @@ fun AddRecipeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            focusedTextColor = MaterialTheme.colorScheme.background,
-                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -173,7 +175,7 @@ fun AddRecipeScreen(
                         label = {
                             Text(
                                 text = "Bahan-bahan:",
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.primary
                             )
                         },
                         onValueChange = {
@@ -183,12 +185,12 @@ fun AddRecipeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            focusedTextColor = MaterialTheme.colorScheme.background,
-                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -197,8 +199,8 @@ fun AddRecipeScreen(
                         value = steps,
                         label = {
                             Text(
-                                text = "Langkah pembuatan:",
-                                color = MaterialTheme.colorScheme.background
+                                text = "Langkah Pembuatan",
+                                color = MaterialTheme.colorScheme.primary
                             )
                         },
                         onValueChange = {
@@ -208,12 +210,12 @@ fun AddRecipeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            focusedTextColor = MaterialTheme.colorScheme.background,
-                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
                     Spacer(modifier = Modifier.size(16.dp))
@@ -225,16 +227,29 @@ fun AddRecipeScreen(
                         //Tombol untuk konfirmasi penambahan resep
                         Button(
                             onClick = {
+                                if (
+                                    recipeName.text.isEmpty() ||
+                                    ingredients.text.isEmpty() ||
+                                    steps.text.isEmpty()
+                                ){
+                                    Toast.makeText(
+                                        context,
+                                        "Lengkapi kolom resep terlebih dahulu",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@Button
+                                }
+                                Toast.makeText(context, Preferences.id, Toast.LENGTH_SHORT).show()
                                 viewModel.addRecipe(
-                                    recipe =  Recipe(
+                                    recipe = Recipe(
                                         recipeHolder = Preferences.id ?: "",
                                         recipeName = recipeName.text,
                                         ingredients = ingredients.text,
                                         steps = steps.text,
-                                        recipeImg = selectedImageUri.toString(),
+                                        recipeImg = null,
                                         id = null
                                     ),
-                                   file = selectedImageUri
+                                    file = selectedImageUri
                                 )
                             },
                             modifier = Modifier
@@ -247,20 +262,27 @@ fun AddRecipeScreen(
                         ) {
                             Text(
                                 text = "Konfirmasi",
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                     }
                     addRecipeState.DisplayResult(
                         onLoading = {
-                            CircularProgressIndicator()
+                            CircularProgressIndicator(
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
                         },
                         onSuccess = {
                             navigator.navigateUp()
-                            Toast.makeText(context, "Berhasil menambahkan resep", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Berhasil menambahkan resep",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         },
                         onError = { it, _ ->
-                            Toast.makeText(context, "Gagal menambahkan resep", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Gagal menambahkan resep", Toast.LENGTH_SHORT)
+                                .show()
                             Log.d("ADD", it)
                         }
                     )

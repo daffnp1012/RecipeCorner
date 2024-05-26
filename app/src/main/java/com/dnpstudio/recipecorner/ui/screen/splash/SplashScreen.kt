@@ -20,6 +20,7 @@ import com.dnpstudio.recipecorner.ui.screen.destinations.SplashScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 import kotlinx.coroutines.delay
 
 @Destination
@@ -30,7 +31,11 @@ fun SplashScreen(
 ) {
     LaunchedEffect(true){
         delay(2500)
-        navigator.navigate(RegisterScreenDestination)
+        navigator.navigate(RegisterScreenDestination){
+            popUpTo(SplashScreenDestination){
+                inclusive = true
+            }
+        }
     }
 
     Column(

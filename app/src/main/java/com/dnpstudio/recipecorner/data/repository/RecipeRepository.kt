@@ -4,7 +4,6 @@ import android.net.Uri
 import com.dnpstudio.recipecorner.data.source.local.favorite.Favorite
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
 import com.rmaprojects.apirequeststate.ResponseState
-import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
@@ -36,6 +35,8 @@ interface RecipeRepository {
 
     suspend fun unsubcribeChannel()
 
+    suspend fun unsubscribeDetailChannel()
+
     fun getFavoriteList(): Flow<List<Favorite>>
 
     suspend fun insertFavorite(favorite: Favorite)
@@ -46,5 +47,6 @@ interface RecipeRepository {
 
     suspend fun editProfile(id: String, username: String): Flow<ResponseState<Boolean>>
 
+    fun confirmFavorite(favorite: Favorite): Flow<Favorite>
 
 }

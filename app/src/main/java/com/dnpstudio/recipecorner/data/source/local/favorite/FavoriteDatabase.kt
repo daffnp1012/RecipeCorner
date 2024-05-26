@@ -8,7 +8,8 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [Favorite::class],
-    version = 1
+    version = 2,
+    exportSchema = true
 )
 abstract class FavoriteDatabase: RoomDatabase() {
 
@@ -23,7 +24,7 @@ abstract class FavoriteDatabase: RoomDatabase() {
                     context,
                     FavoriteDatabase::class.java,
                     "favorite.db"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
             }
         }
     }

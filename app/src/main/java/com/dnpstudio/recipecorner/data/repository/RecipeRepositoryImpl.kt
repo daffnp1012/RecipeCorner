@@ -13,6 +13,8 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.gotrue.providers.builtin.Email
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.filter.FilterOperation
+import io.github.jan.supabase.postgrest.query.filter.FilterOperator
 import io.github.jan.supabase.realtime.channel
 import io.github.jan.supabase.realtime.postgresListDataFlow
 import io.github.jan.supabase.realtime.postgresSingleDataFlow
@@ -34,11 +36,18 @@ class RecipeRepositoryImpl @Inject constructor(
 ) : RecipeRepository {
 
     private val recipeChannel = client.channel("recipe")
+    private val detailRecipeChannel = client.channel("detail_recipe")
 
     override suspend fun unsubcribeChannel() {
         recipeChannel.unsubscribe()
         client.realtime.removeChannel(recipeChannel)
     }
+
+    override suspend fun unsubscribeDetailChannel() {
+        recipeChannel.unsubscribe()
+        client.realtime.removeChannel(detailRecipeChannel)
+    }
+
 
     override fun getFavoriteList(): Flow<List<Favorite>> {
         return favoriteDatabase.favoriteDao().getFavoriteList()
@@ -76,32 +85,41 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun confirmFavorite(favorite: Favorite): Flow<Favorite> {
+        return favoriteDatabase.favoriteDao().getFavorite(favorite.id!!)
+    }
+
     override suspend fun getRecipe(): Result<Flow<List<Recipe>>> {
+
         val data = recipeChannel.postgresListDataFlow(
             schema = "public",
             table = SupabaseTables.RECIPE_TABLE,
             primaryKey = Recipe::id,
+            filter = FilterOperation(
+                column = "recipe_holder",
+                operator = FilterOperator.EQ,
+                value = Preferences.id.toString()
+            )
         ).flowOn(Dispatchers.IO)
-
+        recipeChannel.subscribe()
         return Result.success(data.map { it.sortedBy { it.id } })
     }
 
     override suspend fun getRecipeDetail(recipeId: Int): Result<Flow<Recipe>> {
-        val data = recipeChannel.postgresSingleDataFlow(
+        val data = detailRecipeChannel.postgresSingleDataFlow(
             schema = "public",
             table = SupabaseTables.RECIPE_TABLE,
             primaryKey = Recipe::id
         ) {
             Recipe::id eq recipeId
         }
-
+        recipeChannel.subscribe()
         return Result.success(data)
     }
 
     override fun deleteRecipe(
         id: Int
     ): Flow<ResponseState<List<Recipe>>> {
-
         return flow {
             emit(ResponseState.Loading)
             try {
@@ -154,15 +172,16 @@ class RecipeRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(email: String, password: String): Flow<ResponseState<Boolean>> = flow {
-
+    override suspend fun login(
+        email: String,
+        password: String
+    ): Flow<ResponseState<Boolean>> = flow {
         emit(ResponseState.Loading)
         try {
             client.auth.signInWith(Email) {
                 this.email = email
                 this.password = password
             }
-
             val user = client.auth.currentSessionOrNull()?.user
             val publicUser = client.from("users")
                 .select {
@@ -171,7 +190,7 @@ class RecipeRepositoryImpl @Inject constructor(
                     }
                 }.decodeSingle<User>()
             Preferences.apply {
-                this.id = publicUser.id.toString()
+                this.id = publicUser.id
                 this.username = publicUser.username
                 this.email = publicUser.email
             }

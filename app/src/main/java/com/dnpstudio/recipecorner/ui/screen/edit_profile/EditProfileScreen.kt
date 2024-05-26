@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -76,7 +77,7 @@ fun EditProfileScreen(
                 title = {
                     Text(
                         text = "Edit Profil",
-                        color = MaterialTheme.colorScheme.background
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 navigationIcon = {
@@ -88,12 +89,12 @@ fun EditProfileScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.background
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    MaterialTheme.colorScheme.primary
+                    MaterialTheme.colorScheme.background
                 )
             )
         }
@@ -102,14 +103,14 @@ fun EditProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(MaterialTheme.colorScheme.secondary),
+                .background(MaterialTheme.colorScheme.background),
         ) {
 
             Text(
                 text = "Username",
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier
                     .padding(16.dp)
             )
@@ -126,7 +127,15 @@ fun EditProfileScreen(
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary
+                )
             )
 
             Spacer(modifier = Modifier.size(20.dp))

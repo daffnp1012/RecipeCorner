@@ -50,6 +50,7 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.dnpstudio.recipecorner.data.source.remote.Recipe
+import com.dnpstudio.recipecorner.preference.Preferences
 import com.dnpstudio.recipecorner.ui.screen.detail.DetailArguments
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -65,19 +66,15 @@ fun UpdateRecipeScreen(
     var updateRecipeName by remember {
         mutableStateOf(TextFieldValue(viewModel.navArgs.recipeName!!))
     }
-
     var updateIngredients by remember {
         mutableStateOf(TextFieldValue(viewModel.navArgs.ingredients!!))
     }
-
     var updateSteps by remember {
         mutableStateOf(TextFieldValue(viewModel.navArgs.steps!!))
     }
-
     var selectedImageUri by remember {
         mutableStateOf<Uri?>(null)
     }
-
     val singlePhotoClicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {
@@ -94,11 +91,11 @@ fun UpdateRecipeScreen(
                 title = {
                     Text(
                         text = "Update Resep",
-                        color = MaterialTheme.colorScheme.background
+                        color = MaterialTheme.colorScheme.primary
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    MaterialTheme.colorScheme.primary
+                    MaterialTheme.colorScheme.background
                 ),
                 navigationIcon = {
                     IconButton(
@@ -109,7 +106,7 @@ fun UpdateRecipeScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "",
-                            tint = MaterialTheme.colorScheme.background
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                 }
@@ -120,7 +117,7 @@ fun UpdateRecipeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
-                .background(MaterialTheme.colorScheme.secondary),
+                .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -135,7 +132,9 @@ fun UpdateRecipeScreen(
                             .padding(horizontal = 16.dp),
                         onClick = {
                             singlePhotoClicker.launch(
-                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                PickVisualMediaRequest(
+                                    ActivityResultContracts.PickVisualMedia.ImageOnly
+                                )
                             )
                         }
                     ) {
@@ -160,7 +159,7 @@ fun UpdateRecipeScreen(
                         label = {
                             Text(
                                 text = "Nama Resep",
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.primary
                             )
                         },
                         onValueChange = {
@@ -170,12 +169,12 @@ fun UpdateRecipeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            focusedTextColor = MaterialTheme.colorScheme.background,
-                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
                     Spacer(modifier = Modifier.height(16.dp))
@@ -185,7 +184,7 @@ fun UpdateRecipeScreen(
                         label = {
                             Text(
                                 text = "Bahan-bahan:",
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.primary
                             )
                         },
                         onValueChange = {
@@ -195,12 +194,12 @@ fun UpdateRecipeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            focusedTextColor = MaterialTheme.colorScheme.background,
-                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -211,7 +210,7 @@ fun UpdateRecipeScreen(
                         label = {
                             Text(
                                 text = "Langkah pembuatan:",
-                                color = MaterialTheme.colorScheme.background
+                                color = MaterialTheme.colorScheme.primary
                             )
                         },
                         onValueChange = {
@@ -221,12 +220,12 @@ fun UpdateRecipeScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.background,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.background,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.background,
-                            focusedTextColor = MaterialTheme.colorScheme.background,
-                            unfocusedTextColor = MaterialTheme.colorScheme.background
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.primary,
+                            focusedTextColor = MaterialTheme.colorScheme.primary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.primary
                         )
                     )
 
@@ -240,6 +239,7 @@ fun UpdateRecipeScreen(
                                 viewModel.updateRecipe(
                                     recipe = Recipe(
                                         recipeName = updateRecipeName.text,
+                                        recipeHolder = Preferences.id ?: "",
                                         recipeImg = viewModel.navArgs.recipeImg.toString(),
                                         ingredients = updateIngredients.text,
                                         steps = updateSteps.text,
@@ -253,12 +253,12 @@ fun UpdateRecipeScreen(
                                 .padding(horizontal = 16.dp)
                                 .align(Alignment.Bottom),
                             colors = ButtonDefaults.buttonColors(
-                                MaterialTheme.colorScheme.background
+                                MaterialTheme.colorScheme.primary
                             )
                         ) {
                             Text(
                                 text = "Konfirmasi",
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                         }
                         updateRecipeState.value.DisplayResult(

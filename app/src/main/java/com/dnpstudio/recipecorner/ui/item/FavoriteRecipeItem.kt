@@ -25,10 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.dnpstudio.recipecorner.R
 
 @Composable
 fun FavoriteRecipeItem(
@@ -64,7 +66,7 @@ fun FavoriteRecipeItem(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "",
-                        tint = MaterialTheme.colorScheme.error
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
                 Spacer(modifier = Modifier.size(6.dp))
@@ -85,6 +87,7 @@ fun FavoriteRecipeItem(
                         .memoryCachePolicy(CachePolicy.DISABLED)
                         .build(),
                     contentDescription = "",
+                    fallback = painterResource(id = R.drawable.no_image),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
