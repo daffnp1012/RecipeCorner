@@ -44,10 +44,9 @@ class RecipeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun unsubscribeDetailChannel() {
-        recipeChannel.unsubscribe()
+        detailRecipeChannel.unsubscribe()
         client.realtime.removeChannel(detailRecipeChannel)
     }
-
 
     override fun getFavoriteList(): Flow<List<Favorite>> {
         return favoriteDatabase.favoriteDao().getFavoriteList()
@@ -113,7 +112,7 @@ class RecipeRepositoryImpl @Inject constructor(
         ) {
             Recipe::id eq recipeId
         }
-        recipeChannel.subscribe()
+        detailRecipeChannel.subscribe()
         return Result.success(data)
     }
 

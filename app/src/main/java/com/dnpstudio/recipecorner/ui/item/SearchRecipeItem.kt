@@ -69,7 +69,7 @@ fun SearchRecipeItem(
                         .memoryCachePolicy(CachePolicy.DISABLED)
                         .build(),
                     contentDescription = "",
-                    fallback = painterResource(id = R.drawable.no_image),
+                    fallback = painterResource(id = R.drawable.no_image_pic),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )

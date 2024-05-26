@@ -67,7 +67,6 @@ fun DetailScreen(
 
     val detailState = viewModel.detailState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val favoriteState = viewModel.favoriteState
 
     val snackBarScope = rememberCoroutineScope()
     val snackBarHostState = remember {
@@ -166,7 +165,7 @@ fun DetailScreen(
                             AsyncImage(
                                 model = detailView.recipeImg,
                                 contentDescription = "",
-                                fallback = painterResource(id = R.drawable.no_image),
+                                fallback = painterResource(id = R.drawable.no_image_pic),
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxWidth()
