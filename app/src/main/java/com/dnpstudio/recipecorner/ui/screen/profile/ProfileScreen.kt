@@ -216,7 +216,15 @@ fun ProfileScreen(
                     }
                 }
             }
-            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Resep Favorit",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .padding(vertical = 16.dp)
+            )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -228,15 +236,6 @@ fun ProfileScreen(
                     )
                     .background(color = MaterialTheme.colorScheme.secondaryContainer)
             ) {
-                Text(
-                    text = "Resep Favorit",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .padding(vertical = 16.dp)
-                )
                 if (favoriteList.isEmpty()){
                     Column(
                         modifier = Modifier.fillMaxSize(),
