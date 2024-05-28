@@ -239,7 +239,6 @@ fun AddRecipeScreen(
                                     ).show()
                                     return@Button
                                 }
-                                Toast.makeText(context, Preferences.id, Toast.LENGTH_SHORT).show()
                                 viewModel.addRecipe(
                                     recipe = Recipe(
                                         recipeHolder = Preferences.id ?: "",
